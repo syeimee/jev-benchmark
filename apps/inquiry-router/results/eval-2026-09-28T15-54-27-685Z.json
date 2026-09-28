@@ -1,0 +1,6908 @@
+{
+  "createdAt": "2026-09-28T15:54:27.685Z",
+  "data": "apps/inquiry-router/data/inquiries.jsonl",
+  "n": 100,
+  "config": {
+    "command": "--with-gpt",
+    "gitCommit": "81d41f1",
+    "gitUncommitted": [
+      "M results/phase5-gpt.jsonl"
+    ],
+    "dataSha256": "d7563cb68e7e58e5dd4aa24222e04a4a0aff3e2dc6517a1881d4f9d9e42e582f",
+    "jev": {
+      "model": "typesafe-ai/jev",
+      "instructions": {
+        "department": "Which team should handle this customer inquiry?",
+        "urgency": "How urgently does this customer inquiry need a response?"
+      },
+      "criteria": {
+        "department": {
+          "billing": "Money on an existing contract: invoices, receipts, charges, payment methods, refunds.",
+          "technical": "The product is not working as expected: errors, bugs, login or sync problems, slowness, integrations, how to use a feature.",
+          "account": "Changes to the account or contract itself: cancellation, plan changes, users and permissions, company or personal details.",
+          "sales": "Not yet a customer for this, or wants to buy more: quotes, demos, trials, pre-purchase questions, partnerships.",
+          "other": "None of the above: feedback, media or recruitment inquiries, spam, unrelated messages."
+        },
+        "urgency": {
+          "high": "Work is stopped, or money, data or security is at risk right now; needs a response today.",
+          "normal": "A real problem or request, but work can continue; a response within a few days is fine.",
+          "low": "A question, idea or feedback with no time pressure."
+        }
+      }
+    },
+    "gpt": {
+      "model": "openai/gpt-5-mini",
+      "system": "You route customer inquiries.\n\nDepartments:\n- billing: Money on an existing contract: invoices, receipts, charges, payment methods, refunds.\n- technical: The product is not working as expected: errors, bugs, login or sync problems, slowness, integrations, how to use a feature.\n- account: Changes to the account or contract itself: cancellation, plan changes, users and permissions, company or personal details.\n- sales: Not yet a customer for this, or wants to buy more: quotes, demos, trials, pre-purchase questions, partnerships.\n- other: None of the above: feedback, media or recruitment inquiries, spam, unrelated messages.\n\nUrgency:\n- high: Work is stopped, or money, data or security is at risk right now; needs a response today.\n- normal: A real problem or request, but work can continue; a response within a few days is fine.\n- low: A question, idea or feedback with no time pressure.\n\nRespond with JSON only."
+    },
+    "rules": {
+      "department": [],
+      "urgency": [
+        {
+          "rule": "至急・緊急",
+          "pattern": "/至急|緊急|大至急/",
+          "value": "high"
+        }
+      ]
+    },
+    "concurrency": 5
+  },
+  "accuracy": {
+    "keyword": {
+      "department": 0.6,
+      "urgency": 0.46,
+      "both": 0.29,
+      "n": 100
+    },
+    "jev": {
+      "department": 0.95,
+      "urgency": 0.72,
+      "both": 0.68,
+      "n": 100
+    },
+    "rulesThenJev": {
+      "department": 0.95,
+      "urgency": 0.72,
+      "both": 0.68,
+      "n": 100
+    },
+    "gpt": {
+      "department": 0.93,
+      "urgency": 0.61,
+      "both": 0.58,
+      "n": 100
+    }
+  },
+  "rulePrecision": {
+    "department": {
+      "hits": 0,
+      "correct": 0
+    },
+    "urgency": {
+      "hits": 4,
+      "correct": 4
+    }
+  },
+  "confidenceBands": {
+    "department": [
+      {
+        "lo": 0,
+        "hi": 0.2,
+        "n": 0,
+        "accuracy": null
+      },
+      {
+        "lo": 0.2,
+        "hi": 0.4,
+        "n": 1,
+        "accuracy": 1
+      },
+      {
+        "lo": 0.4,
+        "hi": 0.6,
+        "n": 10,
+        "accuracy": 0.7
+      },
+      {
+        "lo": 0.6,
+        "hi": 0.8,
+        "n": 11,
+        "accuracy": 1
+      },
+      {
+        "lo": 0.8,
+        "hi": 1,
+        "n": 78,
+        "accuracy": 0.9743589743589743
+      }
+    ],
+    "urgency": [
+      {
+        "lo": 0,
+        "hi": 0.2,
+        "n": 0,
+        "accuracy": null
+      },
+      {
+        "lo": 0.2,
+        "hi": 0.4,
+        "n": 17,
+        "accuracy": 0.47058823529411764
+      },
+      {
+        "lo": 0.4,
+        "hi": 0.6,
+        "n": 11,
+        "accuracy": 0.5454545454545454
+      },
+      {
+        "lo": 0.6,
+        "hi": 0.8,
+        "n": 22,
+        "accuracy": 0.7272727272727273
+      },
+      {
+        "lo": 0.8,
+        "hi": 1,
+        "n": 50,
+        "accuracy": 0.84
+      }
+    ]
+  },
+  "thresholds": [
+    {
+      "threshold": 0,
+      "coverage": 1,
+      "autoAccuracy": {
+        "department": 0.95,
+        "urgency": 0.72,
+        "both": 0.68,
+        "n": 100
+      },
+      "gptFallbackAccuracy": {
+        "department": 0.95,
+        "urgency": 0.72,
+        "both": 0.68,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.2,
+      "coverage": 1,
+      "autoAccuracy": {
+        "department": 0.95,
+        "urgency": 0.72,
+        "both": 0.68,
+        "n": 100
+      },
+      "gptFallbackAccuracy": {
+        "department": 0.95,
+        "urgency": 0.72,
+        "both": 0.68,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.3,
+      "coverage": 0.93,
+      "autoAccuracy": {
+        "department": 0.946236559139785,
+        "urgency": 0.7419354838709677,
+        "both": 0.6989247311827957,
+        "n": 93
+      },
+      "gptFallbackAccuracy": {
+        "department": 0.95,
+        "urgency": 0.73,
+        "both": 0.69,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.4,
+      "coverage": 0.82,
+      "autoAccuracy": {
+        "department": 0.9390243902439024,
+        "urgency": 0.7682926829268293,
+        "both": 0.7195121951219512,
+        "n": 82
+      },
+      "gptFallbackAccuracy": {
+        "department": 0.94,
+        "urgency": 0.71,
+        "both": 0.66,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.5,
+      "coverage": 0.7,
+      "autoAccuracy": {
+        "department": 0.9714285714285714,
+        "urgency": 0.7571428571428571,
+        "both": 0.7428571428571429,
+        "n": 70
+      },
+      "gptFallbackAccuracy": {
+        "department": 0.93,
+        "urgency": 0.69,
+        "both": 0.65,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.6,
+      "coverage": 0.64,
+      "autoAccuracy": {
+        "department": 0.96875,
+        "urgency": 0.796875,
+        "both": 0.78125,
+        "n": 64
+      },
+      "gptFallbackAccuracy": {
+        "department": 0.93,
+        "urgency": 0.68,
+        "both": 0.64,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.7,
+      "coverage": 0.55,
+      "autoAccuracy": {
+        "department": 0.9636363636363636,
+        "urgency": 0.8181818181818182,
+        "both": 0.8,
+        "n": 55
+      },
+      "gptFallbackAccuracy": {
+        "department": 0.93,
+        "urgency": 0.67,
+        "both": 0.63,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.8,
+      "coverage": 0.4,
+      "autoAccuracy": {
+        "department": 0.975,
+        "urgency": 0.875,
+        "both": 0.85,
+        "n": 40
+      },
+      "gptFallbackAccuracy": {
+        "department": 0.93,
+        "urgency": 0.63,
+        "both": 0.59,
+        "n": 100
+      }
+    }
+  ],
+  "costUsd": 0.06931394799999997,
+  "latencyMs": {
+    "jevMedian": 409,
+    "gptMedian": 4309
+  },
+  "rows": [
+    {
+      "item": {
+        "id": 1,
+        "text": "先月分の請求書を再発行していただけますか。経理に提出する必要があります。",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.98
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "sales": 0,
+              "technical": 0,
+              "other": 0,
+              "billing": 1,
+              "account": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.01,
+              "high": 0.01,
+              "normal": 0.98
+            },
+            "confidence": 0.98
+          },
+          "latencyMs": 444,
+          "costUsd": 0.000025578,
+          "usage": {
+            "inputTokens": 609,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "先月分の請求書の再発行を依頼しており、経理への提出が必要です。",
+          "latencyMs": 21266,
+          "costUsd": 0.000765,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 2,
+        "text": "クレジットカードの有効期限が切れたので、支払い方法を更新したいです。どこから変更できますか？",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.6
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "sales": 0,
+              "account": 0,
+              "other": 0,
+              "technical": 0,
+              "billing": 1
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.73,
+              "low": 0.04,
+              "high": 0.23
+            },
+            "confidence": 0.6
+          },
+          "latencyMs": 426,
+          "costUsd": 0.000025998,
+          "usage": {
+            "inputTokens": 619,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "クレジットカードの有効期限切れに伴い、支払い方法の更新場所を尋ねています。",
+          "latencyMs": 3354,
+          "costUsd": 0.0006625,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 3,
+        "text": "今月の利用料金が二重に引き落とされています。確認のうえ返金をお願いします。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.66
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "sales": 0,
+              "account": 0,
+              "technical": 0,
+              "billing": 1,
+              "other": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.23,
+              "high": 0.77,
+              "low": 0
+            },
+            "confidence": 0.66
+          },
+          "latencyMs": 579,
+          "costUsd": 0.00002562,
+          "usage": {
+            "inputTokens": 610,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "high",
+          "reasoning": "今月の請求が二重に課金されているため、確認と速やかな返金をお願いします。",
+          "latencyMs": 2730,
+          "costUsd": 0.00050275,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 4,
+        "text": "請求書の宛名を株式会社から合同会社に変えてほしいです。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.51
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.84
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "technical": 0,
+              "billing": 0.61,
+              "account": 0.39,
+              "other": 0,
+              "sales": 0
+            },
+            "confidence": 0.51
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.9,
+              "low": 0.1,
+              "high": 0
+            },
+            "confidence": 0.84
+          },
+          "latencyMs": 424,
+          "costUsd": 0.000025242,
+          "usage": {
+            "inputTokens": 601,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "請求書の宛名を株式会社から合同会社に変更したいと依頼しています。",
+          "latencyMs": 4570,
+          "costUsd": 0.0007635,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 5,
+        "text": "年払いに切り替えると割引はありますか？今は月払いで使っています。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.72
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.74
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "technical": 0,
+              "account": 0.21,
+              "sales": 0.01,
+              "other": 0,
+              "billing": 0.78
+            },
+            "confidence": 0.72
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "low": 0.83,
+              "normal": 0.17,
+              "high": 0
+            },
+            "confidence": 0.74
+          },
+          "latencyMs": 412,
+          "costUsd": 0.00002541,
+          "usage": {
+            "inputTokens": 605,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "low",
+          "reasoning": "年払いへの割引に関するご質問は請求・料金に関する問い合わせのため、billing部門へ振り分けます。",
+          "latencyMs": 3901,
+          "costUsd": 0.00077625,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 6,
+        "text": "銀行振込で支払いたいのですが、振込先口座を教えてください。支払期日が明日です。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "low"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.97
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "account": 0,
+              "sales": 0,
+              "billing": 1,
+              "technical": 0,
+              "other": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.02,
+              "low": 0,
+              "high": 0.98
+            },
+            "confidence": 0.97
+          },
+          "latencyMs": 351,
+          "costUsd": 0.000025704,
+          "usage": {
+            "inputTokens": 612,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "high",
+          "reasoning": "支払期日が明日で、銀行振込の振込先口座を教えてほしいとのこと。",
+          "latencyMs": 2493,
+          "costUsd": 0.00051425,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 7,
+        "text": "領収書をPDFでダウンロードする方法を教えてください。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "low"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.92
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.38
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "billing": 0.94,
+              "sales": 0,
+              "technical": 0.06,
+              "account": 0,
+              "other": 0
+            },
+            "confidence": 0.92
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.41,
+              "low": 0.59
+            },
+            "confidence": 0.38
+          },
+          "latencyMs": 304,
+          "costUsd": 0.000025116,
+          "usage": {
+            "inputTokens": 598,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "User is asking how to download a receipt (領収書) as a PDF.",
+          "latencyMs": 2497,
+          "costUsd": 0.00050275,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 8,
+        "text": "適格請求書（インボイス）の登録番号が請求書に記載されていません。",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.96
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.75
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "billing": 0.96,
+              "technical": 0.02,
+              "sales": 0,
+              "account": 0.02,
+              "other": 0
+            },
+            "confidence": 0.96
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0.14,
+              "low": 0.03,
+              "normal": 0.83
+            },
+            "confidence": 0.75
+          },
+          "latencyMs": 378,
+          "costUsd": 0.00002541,
+          "usage": {
+            "inputTokens": 605,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "high",
+          "reasoning": "請求書に適格請求書発行事業者の登録番号が記載されておらず、税務処理や控除に影響が出る可能性があるため。",
+          "latencyMs": 5880,
+          "costUsd": 0.00098875,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 9,
+        "text": "ユーザーを3人減らしたのに、請求額が変わっていません。",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.83
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.25
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "billing": 0.87,
+              "other": 0,
+              "account": 0.13,
+              "technical": 0,
+              "sales": 0
+            },
+            "confidence": 0.83
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.5,
+              "high": 0.5,
+              "low": 0
+            },
+            "confidence": 0.25
+          },
+          "latencyMs": 360,
+          "costUsd": 0.0000252,
+          "usage": {
+            "inputTokens": 600,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "ユーザーを3人削除したが請求額が変わっていないとの問い合わせ",
+          "latencyMs": 2686,
+          "costUsd": 0.000534,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 10,
+        "text": "カード決済がエラーになり支払いが完了しません。このままだとサービスが止まると通知が来ています。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.93
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "sales": 0,
+              "technical": 0.05,
+              "billing": 0.95,
+              "account": 0,
+              "other": 0
+            },
+            "confidence": 0.93
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0,
+              "high": 1,
+              "low": 0
+            },
+            "confidence": 1
+          },
+          "latencyMs": 348,
+          "costUsd": 0.00002604,
+          "usage": {
+            "inputTokens": 620,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "high",
+          "reasoning": "カード決済がエラーで支払いが完了せず、サービス停止の通知が来ているため緊急対応が必要です。",
+          "latencyMs": 3409,
+          "costUsd": 0.00060225,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 11,
+        "text": "請求画面を開くと真っ白になって何も表示されません。ブラウザはChromeです。",
+        "department": "technical",
+        "urgency": "normal",
+        "note": "キーワードは請求だが、中身は表示の不具合"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.49
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "other": 0,
+              "technical": 0.98,
+              "billing": 0.02,
+              "account": 0,
+              "sales": 0
+            },
+            "confidence": 0.98
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.33,
+              "high": 0.67,
+              "low": 0
+            },
+            "confidence": 0.49
+          },
+          "latencyMs": 342,
+          "costUsd": 0.000025536,
+          "usage": {
+            "inputTokens": 608,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "Chromeで請求画面が真っ白になり表示されないため、技術的な対応が必要です。",
+          "latencyMs": 3682,
+          "costUsd": 0.00066725,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 12,
+        "text": "社員全員がログインできません。朝から業務が完全に止まっています。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "technical": 1,
+              "account": 0,
+              "sales": 0,
+              "other": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "low": 0,
+              "normal": 0,
+              "high": 1
+            },
+            "confidence": 1
+          },
+          "latencyMs": 477,
+          "costUsd": 0.00002541,
+          "usage": {
+            "inputTokens": 605,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "全社員がログインできず業務が停止しているため、至急対応が必要です。",
+          "latencyMs": 3388,
+          "costUsd": 0.00060775,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 13,
+        "text": "CSVの取り込みで文字化けします。Excelで保存したファイルです。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.81
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0,
+              "sales": 0,
+              "technical": 1,
+              "other": 0,
+              "account": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.02,
+              "normal": 0.87,
+              "high": 0.11
+            },
+            "confidence": 0.81
+          },
+          "latencyMs": 524,
+          "costUsd": 0.000025284,
+          "usage": {
+            "inputTokens": 602,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "CSVの文字エンコーディング（Excelの保存形式）が原因で文字化けしている可能性があります。",
+          "latencyMs": 3389,
+          "costUsd": 0.00051925,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 14,
+        "text": "スマホアプリとPCでデータが同期されません。昨日から発生しています。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.44
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "other": 0,
+              "technical": 1,
+              "billing": 0,
+              "account": 0,
+              "sales": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.63,
+              "high": 0.37,
+              "low": 0
+            },
+            "confidence": 0.44
+          },
+          "latencyMs": 12161,
+          "costUsd": 0.000025452,
+          "usage": {
+            "inputTokens": 606,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "スマホアプリとPCでデータが同期されず、使用に支障が出ているため対応が急ぎです。",
+          "latencyMs": 5395,
+          "costUsd": 0.00086375,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 15,
+        "text": "ダッシュボードの表示がとても遅く、開くのに30秒以上かかります。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.78
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0,
+              "sales": 0,
+              "other": 0,
+              "technical": 1,
+              "account": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0.14,
+              "normal": 0.86,
+              "low": 0
+            },
+            "confidence": 0.78
+          },
+          "latencyMs": 577,
+          "costUsd": 0.000025452,
+          "usage": {
+            "inputTokens": 606,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "ダッシュボードの読み込みに30秒以上かかるとの報告があり、動作不良として調査が必要です。",
+          "latencyMs": 3629,
+          "costUsd": 0.00065275,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 16,
+        "text": "APIでタスクを作成すると500エラーが返ってきます。リクエスト例を添付します。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.3
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "account": 0,
+              "other": 0,
+              "sales": 0,
+              "technical": 1,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.46,
+              "low": 0,
+              "high": 0.54
+            },
+            "confidence": 0.3
+          },
+          "latencyMs": 361,
+          "costUsd": 0.000025662,
+          "usage": {
+            "inputTokens": 611,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "APIでタスク作成時に500エラーが発生しており、動作が停止しているため対応が必要です。",
+          "latencyMs": 5073,
+          "costUsd": 0.0007515,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 17,
+        "text": "Slack連携の通知が届かなくなりました。設定は変えていません。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.79
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "other": 0,
+              "account": 0,
+              "billing": 0,
+              "technical": 1,
+              "sales": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.86,
+              "low": 0,
+              "high": 0.14
+            },
+            "confidence": 0.79
+          },
+          "latencyMs": 322,
+          "costUsd": 0.000025284,
+          "usage": {
+            "inputTokens": 602,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "Slack連携による通知が届かなくなっており、統合の技術的な問題対応が必要です。",
+          "latencyMs": 5165,
+          "costUsd": 0.0008535,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 18,
+        "text": "二段階認証のスマホを紛失してログインできなくなりました。今日の会議資料がすべて中に入っています。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "account": 0.02,
+              "billing": 0,
+              "technical": 0.98,
+              "sales": 0,
+              "other": 0
+            },
+            "confidence": 0.98
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0,
+              "high": 1,
+              "low": 0
+            },
+            "confidence": 1
+          },
+          "latencyMs": 335,
+          "costUsd": 0.000026124,
+          "usage": {
+            "inputTokens": 622,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "二段階認証用のスマホを紛失してログインできず、本日の会議資料にアクセスできないため至急対応が必要です。",
+          "latencyMs": 4108,
+          "costUsd": 0.00063325,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 19,
+        "text": "ガントチャートで依存関係を設定する方法を知りたいです。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.76
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "technical": 1,
+              "sales": 0,
+              "account": 0,
+              "billing": 0,
+              "other": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "low": 0.84,
+              "high": 0,
+              "normal": 0.16
+            },
+            "confidence": 0.76
+          },
+          "latencyMs": 345,
+          "costUsd": 0.0000252,
+          "usage": {
+            "inputTokens": 600,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "User is asking how to set task dependencies in a Gantt chart.",
+          "latencyMs": 2875,
+          "costUsd": 0.0004375,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 20,
+        "text": "削除したプロジェクトを復元できますか？誤って消してしまいました。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.93
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "sales": 0,
+              "other": 0,
+              "billing": 0,
+              "technical": 1,
+              "account": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.04,
+              "high": 0.96,
+              "low": 0
+            },
+            "confidence": 0.93
+          },
+          "latencyMs": 322,
+          "costUsd": 0.000025452,
+          "usage": {
+            "inputTokens": 606,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "誤ってプロジェクトを削除したため、データ復元が必要です。",
+          "latencyMs": 4868,
+          "costUsd": 0.00075175,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 21,
+        "text": "パスワードリセットのメールが届きません。迷惑メールフォルダも確認しました。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.54
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0,
+              "sales": 0,
+              "technical": 0.99,
+              "other": 0,
+              "account": 0.01
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.3,
+              "low": 0,
+              "high": 0.7
+            },
+            "confidence": 0.54
+          },
+          "latencyMs": 356,
+          "costUsd": 0.00002562,
+          "usage": {
+            "inputTokens": 610,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "パスワードリセットメールが届かずログインできないため、早急な対応が必要です。",
+          "latencyMs": 4269,
+          "costUsd": 0.0006265,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 22,
+        "text": "ファイルをアップロードすると「容量制限を超えています」と出ますが、まだ半分も使っていないはずです。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.66
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "technical": 0.99,
+              "account": 0.01,
+              "sales": 0,
+              "other": 0,
+              "billing": 0
+            },
+            "confidence": 0.98
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.04,
+              "high": 0.19,
+              "normal": 0.77
+            },
+            "confidence": 0.66
+          },
+          "latencyMs": 393,
+          "costUsd": 0.000026124,
+          "usage": {
+            "inputTokens": 622,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "ファイルアップロード時に「容量制限を超えています」と表示されるが、アカウントの使用量は半分未満のはずでアップロードできない問題です。",
+          "latencyMs": 5388,
+          "costUsd": 0.0008965,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 23,
+        "text": "見知らぬIPアドレスからのログイン通知が来ました。不正アクセスではないか心配です。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.92
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.99
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "technical": 0.9400000000000001,
+              "sales": 0,
+              "other": 0,
+              "account": 0.06,
+              "billing": 0
+            },
+            "confidence": 0.92
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.01,
+              "high": 0.99,
+              "low": 0
+            },
+            "confidence": 0.99
+          },
+          "latencyMs": 489,
+          "costUsd": 0.000025788,
+          "usage": {
+            "inputTokens": 614,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "不明なIPからのログイン通知は不正アクセスの可能性があり、ただちに対応が必要です。",
+          "latencyMs": 4244,
+          "costUsd": 0.00067125,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 24,
+        "text": "繰り返しタスクの設定で、毎月最終営業日を指定することはできますか？",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.8
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0.01,
+              "sales": 0,
+              "technical": 0.99,
+              "other": 0,
+              "account": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0.13,
+              "low": 0.87,
+              "high": 0
+            },
+            "confidence": 0.8
+          },
+          "latencyMs": 307,
+          "costUsd": 0.000025494,
+          "usage": {
+            "inputTokens": 607,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "繰り返しタスクで「毎月最終営業日」を指定できるかについての機能利用の問い合わせです。",
+          "latencyMs": 5945,
+          "costUsd": 0.000781,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 25,
+        "text": "Googleカレンダー連携を設定したのに、予定が反映されません。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.94
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "technical": 1,
+              "other": 0,
+              "sales": 0,
+              "account": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.01,
+              "high": 0.03,
+              "normal": 0.96
+            },
+            "confidence": 0.94
+          },
+          "latencyMs": 9479,
+          "costUsd": 0.000025242,
+          "usage": {
+            "inputTokens": 601,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "Googleカレンダー連携が正しく動作せず予定が同期されないため、技術的対応が必要です。",
+          "latencyMs": 4086,
+          "costUsd": 0.0005915,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 26,
+        "text": "本番環境のWebhookが今朝から一切送られてきません。顧客への自動通知が止まっています。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "account": 0,
+              "other": 0,
+              "technical": 1,
+              "sales": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "high": 1,
+              "low": 0,
+              "normal": 0
+            },
+            "confidence": 1
+          },
+          "latencyMs": 417,
+          "costUsd": 0.00002583,
+          "usage": {
+            "inputTokens": 615,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "Production webhooks stopped delivering since this morning, halting customer notifications.",
+          "latencyMs": 3981,
+          "costUsd": 0.00051825,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 27,
+        "text": "エクスポートしたPDFのレイアウトが崩れています。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.95
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0,
+              "other": 0,
+              "account": 0,
+              "technical": 1,
+              "sales": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0.02,
+              "normal": 0.97,
+              "low": 0.01
+            },
+            "confidence": 0.95
+          },
+          "latencyMs": 312,
+          "costUsd": 0.000025074,
+          "usage": {
+            "inputTokens": 597,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "エクスポートしたPDFでレイアウトが崩れるため、表示に関する技術的な問題です。",
+          "latencyMs": 3357,
+          "costUsd": 0.00054675,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 28,
+        "text": "iPhoneアプリが起動直後に落ちます。iOS 19にアップデートしてからです。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.72
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "account": 0,
+              "billing": 0,
+              "other": 0,
+              "technical": 1,
+              "sales": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.8200000000000001,
+              "high": 0.18,
+              "low": 0
+            },
+            "confidence": 0.72
+          },
+          "latencyMs": 689,
+          "costUsd": 0.000025578,
+          "usage": {
+            "inputTokens": 609,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "iOS 19にアップデートしてからアプリが起動直後にクラッシュして利用できないため、早急な対応が必要です。",
+          "latencyMs": 3579,
+          "costUsd": 0.00054125,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 29,
+        "text": "検索で過去のコメントがヒットしません。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.74
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0,
+              "sales": 0,
+              "technical": 1,
+              "account": 0,
+              "other": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.83,
+              "low": 0.17,
+              "high": 0
+            },
+            "confidence": 0.74
+          },
+          "latencyMs": 447,
+          "costUsd": 0.000024864,
+          "usage": {
+            "inputTokens": 592,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "検索で過去のコメントが見つからないため、検索機能に問題がある可能性があります。",
+          "latencyMs": 4371,
+          "costUsd": 0.00059975,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 30,
+        "text": "SSOの設定を変えたら管理者を含め誰もログインできなくなりました。至急助けてください。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "rule": {
+        "urgency": "high"
+      },
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0,
+              "sales": 0,
+              "technical": 1,
+              "other": 0,
+              "account": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0,
+              "low": 0,
+              "high": 1
+            },
+            "confidence": 1
+          },
+          "latencyMs": 8979,
+          "costUsd": 0.00002583,
+          "usage": {
+            "inputTokens": 615,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "SSO設定変更で管理者を含む全員がログインできず業務に支障が出ているため至急対応が必要です。",
+          "latencyMs": 4486,
+          "costUsd": 0.00055225,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 31,
+        "text": "請求書の発行機能で、自社のロゴを入れる方法はありますか？",
+        "department": "technical",
+        "urgency": "low",
+        "note": "請求書という語を含むが、機能の使い方の質問"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.66
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.6
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "other": 0,
+              "technical": 0.73,
+              "sales": 0,
+              "account": 0.01,
+              "billing": 0.26
+            },
+            "confidence": 0.66
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.26,
+              "low": 0.74
+            },
+            "confidence": 0.6
+          },
+          "latencyMs": 516,
+          "costUsd": 0.000025242,
+          "usage": {
+            "inputTokens": 601,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "User is asking how to include their company logo on issued invoices — a how-to product feature question.",
+          "latencyMs": 8183,
+          "costUsd": 0.00071425,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 32,
+        "text": "通知メールが1日に何十通も来てしまいます。まとめて受け取る設定はありますか？",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.48
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "sales": 0,
+              "account": 0,
+              "other": 0,
+              "technical": 1,
+              "billing": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.65,
+              "low": 0.35,
+              "high": 0
+            },
+            "confidence": 0.48
+          },
+          "latencyMs": 334,
+          "costUsd": 0.000025662,
+          "usage": {
+            "inputTokens": 611,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "通知メールをまとめて受け取れる設定があるかどうかを確認したいとのこと。",
+          "latencyMs": 4245,
+          "costUsd": 0.000651,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 33,
+        "text": "解約したいです。手続きの方法を教えてください。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "low"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.9
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "sales": 0,
+              "billing": 0,
+              "technical": 0,
+              "other": 0,
+              "account": 1
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0.01,
+              "normal": 0.93,
+              "low": 0.06
+            },
+            "confidence": 0.9
+          },
+          "latencyMs": 10365,
+          "costUsd": 0.000025032,
+          "usage": {
+            "inputTokens": 596,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "契約の解約手続き方法を教えてほしいという依頼です。",
+          "latencyMs": 3791,
+          "costUsd": 0.00059675,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 34,
+        "text": "来月からプランをスタンダードからプロに変更したいです。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.81
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "other": 0,
+              "technical": 0,
+              "billing": 0,
+              "account": 1,
+              "sales": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.87,
+              "high": 0,
+              "low": 0.13
+            },
+            "confidence": 0.81
+          },
+          "latencyMs": 590,
+          "costUsd": 0.0000252,
+          "usage": {
+            "inputTokens": 600,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "来月からスタンダード→プロへのプラン変更を希望しているため、アカウント対応が必要です。",
+          "latencyMs": 4786,
+          "costUsd": 0.000581,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 35,
+        "text": "退職した社員のアカウントを削除したいのですが、データは残せますか？",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.74
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0,
+              "other": 0,
+              "account": 1,
+              "billing": 0,
+              "sales": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.13,
+              "normal": 0.83,
+              "high": 0.04
+            },
+            "confidence": 0.74
+          },
+          "latencyMs": 317,
+          "costUsd": 0.000025452,
+          "usage": {
+            "inputTokens": 606,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "退職した社員のアカウント削除とデータ保持の可否についての問い合わせ",
+          "latencyMs": 5034,
+          "costUsd": 0.000595,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 36,
+        "text": "会社の住所が変わったので、登録情報を変更したいです。",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.94
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0,
+              "billing": 0,
+              "account": 1,
+              "other": 0,
+              "sales": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.96,
+              "low": 0.04,
+              "high": 0
+            },
+            "confidence": 0.94
+          },
+          "latencyMs": 358,
+          "costUsd": 0.000025158,
+          "usage": {
+            "inputTokens": 599,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "Customer requests to update their company's registered address in the account information.",
+          "latencyMs": 3762,
+          "costUsd": 0.000513,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 37,
+        "text": "管理者が退職してしまい、誰も管理者権限を持っていません。ユーザー追加ができず困っています。",
+        "department": "account",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.82
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0.01,
+              "other": 0,
+              "account": 0.99,
+              "billing": 0,
+              "sales": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "low": 0,
+              "high": 0.88,
+              "normal": 0.12
+            },
+            "confidence": 0.82
+          },
+          "latencyMs": 336,
+          "costUsd": 0.000025998,
+          "usage": {
+            "inputTokens": 619,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "high",
+          "reasoning": "管理者が不在でアカウント管理ができずユーザー追加ができないため、早急な対応が必要です。",
+          "latencyMs": 4539,
+          "costUsd": 0.0006965,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 38,
+        "text": "契約の名義を親会社に移したいです。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.88
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "billing": 0,
+              "sales": 0,
+              "technical": 0,
+              "other": 0,
+              "account": 1
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.92,
+              "low": 0.08,
+              "high": 0
+            },
+            "confidence": 0.88
+          },
+          "latencyMs": 467,
+          "costUsd": 0.00002478,
+          "usage": {
+            "inputTokens": 590,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "契約の名義を親会社に移したいというアカウント変更の依頼のため。",
+          "latencyMs": 4309,
+          "costUsd": 0.00046425,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 39,
+        "text": "無料プランに戻すことはできますか？",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.33
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "account": 0.99,
+              "sales": 0,
+              "technical": 0,
+              "billing": 0.01,
+              "other": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0.44,
+              "high": 0,
+              "low": 0.56
+            },
+            "confidence": 0.33
+          },
+          "latencyMs": 376,
+          "costUsd": 0.00002478,
+          "usage": {
+            "inputTokens": 590,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "ユーザーが現在のプランを無料プランに戻せるかを尋ねている。",
+          "latencyMs": 3597,
+          "costUsd": 0.0005775,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 40,
+        "text": "社員の個人情報を削除してほしいという依頼がありました。対応方法を教えてください。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.78
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.59
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0,
+              "other": 0.18,
+              "sales": 0,
+              "account": 0.82,
+              "billing": 0
+            },
+            "confidence": 0.78
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.73,
+              "high": 0.24,
+              "low": 0.03
+            },
+            "confidence": 0.59
+          },
+          "latencyMs": 490,
+          "costUsd": 0.000025746,
+          "usage": {
+            "inputTokens": 613,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "従業員の個人情報削除はアカウント／データ保護の手続きで対応する必要があります。",
+          "latencyMs": 5241,
+          "costUsd": 0.000757,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 41,
+        "text": "契約更新日が近いですが、自動更新を止めたいです。更新日は今週金曜です。",
+        "department": "account",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.63
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0,
+              "sales": 0,
+              "account": 1,
+              "other": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "low": 0,
+              "normal": 0.25,
+              "high": 0.75
+            },
+            "confidence": 0.63
+          },
+          "latencyMs": 510,
+          "costUsd": 0.000025536,
+          "usage": {
+            "inputTokens": 608,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "high",
+          "reasoning": "今週金曜の契約更新前に自動更新を停止したいと緊急で依頼しています。",
+          "latencyMs": 4664,
+          "costUsd": 0.000687,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 42,
+        "text": "担当者が変わったので、連絡先メールアドレスを変更してください。",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.94
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "sales": 0,
+              "account": 1,
+              "billing": 0,
+              "technical": 0,
+              "other": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.03,
+              "normal": 0.96,
+              "high": 0.01
+            },
+            "confidence": 0.94
+          },
+          "latencyMs": 348,
+          "costUsd": 0.000025368,
+          "usage": {
+            "inputTokens": 604,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "担当者交代に伴う連絡先メールアドレスの更新依頼。",
+          "latencyMs": 4765,
+          "costUsd": 0.0006955,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 43,
+        "text": "部署ごとに閲覧権限を分けたいのですが、今のプランで可能ですか？",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.94
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.28
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "sales": 0.01,
+              "billing": 0,
+              "other": 0,
+              "technical": 0.04,
+              "account": 0.95
+            },
+            "confidence": 0.94
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.52,
+              "low": 0.48
+            },
+            "confidence": 0.28
+          },
+          "latencyMs": 415,
+          "costUsd": 0.00002541,
+          "usage": {
+            "inputTokens": 605,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "現在のプランで部署ごとに閲覧権限を分けられるか確認したい。",
+          "latencyMs": 5341,
+          "costUsd": 0.000783,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 44,
+        "text": "一時的に利用を休止することはできますか？繁忙期が終わるまで使わない予定です。",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.3
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "sales": 0,
+              "account": 0.99,
+              "technical": 0,
+              "other": 0,
+              "billing": 0.01
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.53,
+              "low": 0.47
+            },
+            "confidence": 0.3
+          },
+          "latencyMs": 310,
+          "costUsd": 0.000025662,
+          "usage": {
+            "inputTokens": 611,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "一時的な利用停止（休止・サブスクリプションの凍結）についての問い合わせのため。",
+          "latencyMs": 5159,
+          "costUsd": 0.00076175,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 45,
+        "text": "解約はしないのですが、使っていないオプションだけ外したいです。",
+        "department": "account",
+        "urgency": "low",
+        "note": "解約ルールに引っかかるが、実際はプラン変更"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.71
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0,
+              "billing": 0.02,
+              "account": 0.98,
+              "other": 0,
+              "sales": 0
+            },
+            "confidence": 0.98
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.8,
+              "low": 0.2,
+              "high": 0
+            },
+            "confidence": 0.71
+          },
+          "latencyMs": 341,
+          "costUsd": 0.000025368,
+          "usage": {
+            "inputTokens": 604,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "利用していないオプションのみを外したいというアカウント／プラン変更の問い合わせです。",
+          "latencyMs": 3999,
+          "costUsd": 0.00058,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 46,
+        "text": "アカウントの統合はできますか？部署ごとに別々に契約してしまいました。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.84
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "sales": 0,
+              "account": 1,
+              "billing": 0,
+              "technical": 0,
+              "other": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.11,
+              "normal": 0.89,
+              "high": 0
+            },
+            "confidence": 0.84
+          },
+          "latencyMs": 409,
+          "costUsd": 0.000025494,
+          "usage": {
+            "inputTokens": 607,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "部署ごとに別契約したアカウントの統合可否と手続きを確認したい問い合わせ",
+          "latencyMs": 4071,
+          "costUsd": 0.00059675,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 47,
+        "text": "退会すると、これまでのデータはどうなりますか？",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.26
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "other": 0,
+              "billing": 0,
+              "technical": 0,
+              "sales": 0,
+              "account": 1
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0.04,
+              "normal": 0.45,
+              "low": 0.51
+            },
+            "confidence": 0.26
+          },
+          "latencyMs": 411,
+          "costUsd": 0.000025032,
+          "usage": {
+            "inputTokens": 596,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "退会時のデータの扱いについて質問しています。",
+          "latencyMs": 3828,
+          "costUsd": 0.0005505,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 48,
+        "text": "ユーザー数の上限に達して、新入社員を追加できません。明日が入社日です。",
+        "department": "account",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.98
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0,
+              "other": 0,
+              "billing": 0,
+              "account": 0.99,
+              "sales": 0.01
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "low": 0,
+              "high": 0.99,
+              "normal": 0.01
+            },
+            "confidence": 0.98
+          },
+          "latencyMs": 490,
+          "costUsd": 0.000025536,
+          "usage": {
+            "inputTokens": 608,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "high",
+          "reasoning": "ユーザー上限に達して新入社員を追加できず、明日から作業が開始できない可能性があるため。",
+          "latencyMs": 3813,
+          "costUsd": 0.000531,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 49,
+        "text": "解約後に請求が来ています。先月末で解約したはずです。",
+        "department": "billing",
+        "urgency": "high",
+        "note": "解約の語があるが、問題は解約後の請求"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.89
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.28
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "account": 0.08,
+              "technical": 0,
+              "sales": 0,
+              "billing": 0.92,
+              "other": 0
+            },
+            "confidence": 0.89
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "high": 0.52,
+              "normal": 0.48,
+              "low": 0
+            },
+            "confidence": 0.28
+          },
+          "latencyMs": 315,
+          "costUsd": 0.000025158,
+          "usage": {
+            "inputTokens": 599,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "high",
+          "reasoning": "解約後に請求が発生しているため、すぐに請求内容と契約状況を確認する必要があります。",
+          "latencyMs": 4083,
+          "costUsd": 0.00061,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 50,
+        "text": "2段階認証を全社で必須にする設定を管理者として有効にしたいです。",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.85
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.77
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "technical": 0.88,
+              "account": 0.12,
+              "other": 0,
+              "sales": 0,
+              "billing": 0
+            },
+            "confidence": 0.85
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0.01,
+              "low": 0.15,
+              "normal": 0.84
+            },
+            "confidence": 0.77
+          },
+          "latencyMs": 369,
+          "costUsd": 0.00002541,
+          "usage": {
+            "inputTokens": 605,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "管理者として全社で二段階認証を必須にする設定の有効化を支援します。",
+          "latencyMs": 4230,
+          "costUsd": 0.000643,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 51,
+        "text": "50名規模での導入を検討しています。見積もりをいただけますか。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.95
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "other": 0,
+              "technical": 0,
+              "sales": 1,
+              "account": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.97,
+              "low": 0.03
+            },
+            "confidence": 0.95
+          },
+          "latencyMs": 460,
+          "costUsd": 0.000025368,
+          "usage": {
+            "inputTokens": 604,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "50名規模での導入について見積もりを希望されています。",
+          "latencyMs": 3101,
+          "costUsd": 0.0004905,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 52,
+        "text": "オンラインでデモを見せていただくことは可能ですか？",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.37
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "billing": 0,
+              "other": 0,
+              "account": 0,
+              "sales": 1,
+              "technical": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.58,
+              "low": 0.42,
+              "high": 0
+            },
+            "confidence": 0.37
+          },
+          "latencyMs": 325,
+          "costUsd": 0.000025116,
+          "usage": {
+            "inputTokens": 598,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "User is requesting an online demo (pre-purchase / sales inquiry).",
+          "latencyMs": 3160,
+          "costUsd": 0.00050275,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 53,
+        "text": "無料トライアルの期間を延長してもらえませんか？社内の稟議が間に合いません。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.31
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "account": 0.01,
+              "billing": 0,
+              "technical": 0,
+              "sales": 0.99,
+              "other": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "high": 0.54,
+              "normal": 0.46,
+              "low": 0
+            },
+            "confidence": 0.31
+          },
+          "latencyMs": 363,
+          "costUsd": 0.000025662,
+          "usage": {
+            "inputTokens": 611,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "User requests an extension of the free trial because internal approval (稟議) will be delayed.",
+          "latencyMs": 3085,
+          "costUsd": 0.00053,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 54,
+        "text": "他社ツールからの乗り換えを考えています。データ移行のサポートはありますか？",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.7
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.45
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "account": 0,
+              "billing": 0,
+              "other": 0,
+              "sales": 0.76,
+              "technical": 0.24
+            },
+            "confidence": 0.7
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.63,
+              "high": 0,
+              "low": 0.37
+            },
+            "confidence": 0.45
+          },
+          "latencyMs": 517,
+          "costUsd": 0.00002562,
+          "usage": {
+            "inputTokens": 610,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "他社ツールからの乗り換えに伴うデータ移行のサポートについて問い合わせています。",
+          "latencyMs": 4394,
+          "costUsd": 0.0007055,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 55,
+        "text": "代理店として販売したいのですが、パートナー制度はありますか？",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.39
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "other": 0,
+              "account": 0,
+              "technical": 0,
+              "sales": 1,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0,
+              "low": 0.59,
+              "normal": 0.41
+            },
+            "confidence": 0.39
+          },
+          "latencyMs": 496,
+          "costUsd": 0.000025326,
+          "usage": {
+            "inputTokens": 603,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "代理店として販売するためのパートナー制度の有無と詳細を尋ねています。",
+          "latencyMs": 4120,
+          "costUsd": 0.000657,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 56,
+        "text": "オンプレミス版はありますか？セキュリティ要件で社外クラウドが使えません。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.85
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.9
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "billing": 0,
+              "other": 0,
+              "technical": 0.1,
+              "sales": 0.88,
+              "account": 0.02
+            },
+            "confidence": 0.85
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0.02,
+              "low": 0.05,
+              "normal": 0.93
+            },
+            "confidence": 0.9
+          },
+          "latencyMs": 338,
+          "costUsd": 0.000025578,
+          "usage": {
+            "inputTokens": 609,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "オンプレミス提供の可否や導入方式についての事前相談のため、営業チームで対応するのが適切です。",
+          "latencyMs": 4729,
+          "costUsd": 0.0008035,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 57,
+        "text": "今期中に契約したいので、今週中に見積書を出していただけますか。",
+        "department": "sales",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.36
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "account": 0,
+              "sales": 1,
+              "billing": 0,
+              "technical": 0,
+              "other": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.58,
+              "low": 0,
+              "high": 0.42
+            },
+            "confidence": 0.36
+          },
+          "latencyMs": 345,
+          "costUsd": 0.000025368,
+          "usage": {
+            "inputTokens": 604,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "今期中に契約したいため、今週中に見積書を出してほしいとの依頼です。",
+          "latencyMs": 4461,
+          "costUsd": 0.000793,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 58,
+        "text": "導入事例の資料をいただけますか？製造業のものがあれば助かります。",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.6
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "technical": 0,
+              "other": 0.01,
+              "account": 0,
+              "billing": 0,
+              "sales": 0.99
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.26,
+              "high": 0,
+              "normal": 0.74
+            },
+            "confidence": 0.6
+          },
+          "latencyMs": 478,
+          "costUsd": 0.00002541,
+          "usage": {
+            "inputTokens": 605,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "導入事例資料の提供を依頼しており、製造業の事例を特に希望している",
+          "latencyMs": 3649,
+          "costUsd": 0.00061475,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 59,
+        "text": "現在20ユーザーで利用中です。別の事業部でも追加で100ユーザー導入したいので相談させてください。",
+        "department": "sales",
+        "urgency": "normal",
+        "note": "既存顧客だが追加購入なので営業"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.4
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.85
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "billing": 0,
+              "other": 0,
+              "technical": 0,
+              "sales": 0.53,
+              "account": 0.47
+            },
+            "confidence": 0.4
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0,
+              "low": 0.1,
+              "normal": 0.9
+            },
+            "confidence": 0.85
+          },
+          "latencyMs": 11098,
+          "costUsd": 0.000026082,
+          "usage": {
+            "inputTokens": 621,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "別部署への100ユーザー追加導入は購入や見積りが必要なため、営業窓口で対応します。",
+          "latencyMs": 5146,
+          "costUsd": 0.0009005,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 60,
+        "text": "教育機関向けの割引はありますか？",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.85
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "sales": 0.99,
+              "account": 0,
+              "billing": 0.01,
+              "technical": 0,
+              "other": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.1,
+              "low": 0.9
+            },
+            "confidence": 0.85
+          },
+          "latencyMs": 376,
+          "costUsd": 0.000024738,
+          "usage": {
+            "inputTokens": 589,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "User is asking whether discounts are available for educational institutions.",
+          "latencyMs": 3117,
+          "costUsd": 0.00056175,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 61,
+        "text": "セキュリティチェックシートへの回答をお願いできますか？導入検討の条件になっています。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.9
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.89
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "sales": 0.92,
+              "billing": 0,
+              "technical": 0.07,
+              "other": 0.01,
+              "account": 0
+            },
+            "confidence": 0.9
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0.07,
+              "normal": 0.93,
+              "low": 0
+            },
+            "confidence": 0.89
+          },
+          "latencyMs": 480,
+          "costUsd": 0.00002583,
+          "usage": {
+            "inputTokens": 615,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "導入検討のための事前確認なので、通常優先度です。",
+          "latencyMs": 4835,
+          "costUsd": 0.00093475,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 62,
+        "text": "明日の役員会で導入可否を決めます。価格表だけでも今日中にいただけないでしょうか。",
+        "department": "sales",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.99
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "technical": 0,
+              "sales": 1,
+              "account": 0,
+              "other": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "low": 0,
+              "normal": 0.01,
+              "high": 0.99
+            },
+            "confidence": 0.99
+          },
+          "latencyMs": 381,
+          "costUsd": 0.000025746,
+          "usage": {
+            "inputTokens": 613,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "high",
+          "reasoning": "明日の役員会で導入判断するため、今日中に価格表を急ぎで求めている。",
+          "latencyMs": 4199,
+          "costUsd": 0.00081975,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 63,
+        "text": "デモ環境にログインできません。明日お客様に見せる予定です。",
+        "department": "technical",
+        "urgency": "high",
+        "note": "デモの語があるが、ログインの不具合"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.75
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.98
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "account": 0,
+              "billing": 0,
+              "other": 0,
+              "technical": 0.8,
+              "sales": 0.2
+            },
+            "confidence": 0.75
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.01,
+              "high": 0.99,
+              "low": 0
+            },
+            "confidence": 0.98
+          },
+          "latencyMs": 321,
+          "costUsd": 0.000025284,
+          "usage": {
+            "inputTokens": 602,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "デモ環境にログインできず、明日の商談に影響があるため至急対応が必要です。",
+          "latencyMs": 3541,
+          "costUsd": 0.000658,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 64,
+        "text": "共同でイベントを開催しませんか？当社は業務効率化のメディアを運営しています。",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.73
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.7
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "sales": 0.79,
+              "technical": 0,
+              "billing": 0,
+              "other": 0.21,
+              "account": 0
+            },
+            "confidence": 0.73
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0.2,
+              "high": 0,
+              "low": 0.8
+            },
+            "confidence": 0.7
+          },
+          "latencyMs": 322,
+          "costUsd": 0.000025662,
+          "usage": {
+            "inputTokens": 611,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "提携・共同イベントの打診は購入前の営業／パートナーシップ問い合わせに該当するため。",
+          "latencyMs": 3325,
+          "costUsd": 0.00062325,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 65,
+        "text": "機能改善の要望です。タスクに色ラベルを付けられるようにしてほしいです。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.47
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.9
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "other": 0.58,
+              "billing": 0,
+              "technical": 0.42,
+              "sales": 0,
+              "account": 0
+            },
+            "confidence": 0.47
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.07,
+              "low": 0.93
+            },
+            "confidence": 0.9
+          },
+          "latencyMs": 322,
+          "costUsd": 0.000025536,
+          "usage": {
+            "inputTokens": 608,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "low",
+          "reasoning": "機能改善の要望：タスクに色ラベルを付けられるようにしてほしい。",
+          "latencyMs": 4058,
+          "costUsd": 0.00058525,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 66,
+        "text": "いつも便利に使っています。サポートの方の対応がとても丁寧でした。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "account": 0,
+              "sales": 0,
+              "billing": 0,
+              "technical": 0,
+              "other": 1
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0,
+              "low": 1,
+              "high": 0
+            },
+            "confidence": 1
+          },
+          "latencyMs": 6459,
+          "costUsd": 0.000025452,
+          "usage": {
+            "inputTokens": 606,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "low",
+          "reasoning": "Positive feedback praising the product's usefulness and the support team's polite response.",
+          "latencyMs": 3215,
+          "costUsd": 0.00053225,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 67,
+        "text": "御社の取材をさせていただけないでしょうか。業界誌の記者です。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.59
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "technical": 0,
+              "account": 0,
+              "other": 1,
+              "billing": 0,
+              "sales": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.27,
+              "high": 0,
+              "normal": 0.73
+            },
+            "confidence": 0.59
+          },
+          "latencyMs": 5615,
+          "costUsd": 0.000025326,
+          "usage": {
+            "inputTokens": 603,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "normal",
+          "reasoning": "業界誌の取材依頼のため、広報/メディア対応が必要です。",
+          "latencyMs": 4715,
+          "costUsd": 0.0007385,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 68,
+        "text": "エンジニアの採用に応募したいのですが、窓口はこちらでよいですか？",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.27
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "account": 0,
+              "billing": 0,
+              "technical": 0,
+              "sales": 0,
+              "other": 1
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.52,
+              "high": 0,
+              "low": 0.48
+            },
+            "confidence": 0.27
+          },
+          "latencyMs": 333,
+          "costUsd": 0.000025452,
+          "usage": {
+            "inputTokens": 606,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "low",
+          "reasoning": "エンジニア採用の応募窓口確認の問い合わせです。",
+          "latencyMs": 2827,
+          "costUsd": 0.000555,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 69,
+        "text": "【重要】あなたのアカウントが停止されます。こちらのリンクから確認してください。",
+        "department": "other",
+        "urgency": "low",
+        "note": "フィッシング／スパム"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.62
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.89
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "other": 0.7,
+              "technical": 0.03,
+              "billing": 0,
+              "account": 0.27,
+              "sales": 0
+            },
+            "confidence": 0.62
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.03,
+              "high": 0.92,
+              "low": 0.05
+            },
+            "confidence": 0.89
+          },
+          "latencyMs": 363,
+          "costUsd": 0.000025704,
+          "usage": {
+            "inputTokens": 612,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "high",
+          "reasoning": "これは疑わしいフィッシング（スパム）メッセージの可能性が高く、アカウントやセキュリティに関するリスクがあるため早急な対応が必要です。",
+          "latencyMs": 5448,
+          "costUsd": 0.001014,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 70,
+        "text": "株主優待はありますか？",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.61
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.96
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "account": 0.12,
+              "billing": 0.01,
+              "sales": 0.18,
+              "other": 0.69,
+              "technical": 0
+            },
+            "confidence": 0.61
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0.03,
+              "high": 0,
+              "low": 0.97
+            },
+            "confidence": 0.96
+          },
+          "latencyMs": 319,
+          "costUsd": 0.000024528,
+          "usage": {
+            "inputTokens": 584,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "low",
+          "reasoning": "株主優待は投資・会社情報に関する問い合わせで、緊急性が低いため「other」に振り分けました。",
+          "latencyMs": 4834,
+          "costUsd": 0.00086475,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 71,
+        "text": "テスト送信です。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.87
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.99
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "other": 0.9,
+              "technical": 0.1,
+              "billing": 0,
+              "account": 0,
+              "sales": 0
+            },
+            "confidence": 0.87
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0,
+              "high": 0,
+              "low": 1
+            },
+            "confidence": 0.99
+          },
+          "latencyMs": 911,
+          "costUsd": 0.000024402,
+          "usage": {
+            "inputTokens": 581,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "low",
+          "reasoning": "システムの動作確認のためのテスト送信です。",
+          "latencyMs": 3235,
+          "costUsd": 0.00052025,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 72,
+        "text": "UIがわかりにくいです。もっとシンプルにしてください。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.49
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.34
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "account": 0,
+              "sales": 0,
+              "technical": 0.41,
+              "other": 0.59,
+              "billing": 0
+            },
+            "confidence": 0.49
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.56,
+              "low": 0.44,
+              "high": 0
+            },
+            "confidence": 0.34
+          },
+          "latencyMs": 332,
+          "costUsd": 0.000025158,
+          "usage": {
+            "inputTokens": 599,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "low",
+          "reasoning": "UIの改善フィードバックで、時間的緊急性は低い。",
+          "latencyMs": 4567,
+          "costUsd": 0.000745,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 73,
+        "text": "御社のサービス名を騙った電話がかかってきました。注意喚起されたほうがよいと思います。",
+        "department": "other",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.81
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "sales": 0,
+              "account": 0,
+              "other": 0.99,
+              "technical": 0.01,
+              "billing": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "high": 0.88,
+              "low": 0.01,
+              "normal": 0.11
+            },
+            "confidence": 0.81
+          },
+          "latencyMs": 315,
+          "costUsd": 0.000025914,
+          "usage": {
+            "inputTokens": 617,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "normal",
+          "reasoning": "サービス名を騙る不審な電話の注意喚起を希望されているため。",
+          "latencyMs": 4326,
+          "costUsd": 0.00074225,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 74,
+        "text": "学生です。卒業研究でアンケートにご協力いただけませんか。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.27
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "sales": 0,
+              "billing": 0,
+              "technical": 0,
+              "other": 1,
+              "account": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.49,
+              "low": 0.51
+            },
+            "confidence": 0.27
+          },
+          "latencyMs": 350,
+          "costUsd": 0.000025242,
+          "usage": {
+            "inputTokens": 601,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "low",
+          "reasoning": "Student requesting participation in a survey for graduation research.",
+          "latencyMs": 3300,
+          "costUsd": 0.0005535,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 75,
+        "text": "障害情報はどこで確認できますか？今つながらないのですが、うちだけでしょうか。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.4
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "sales": 0,
+              "account": 0,
+              "billing": 0,
+              "technical": 1,
+              "other": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "high": 0.59,
+              "normal": 0.39,
+              "low": 0.02
+            },
+            "confidence": 0.4
+          },
+          "latencyMs": 8761,
+          "costUsd": 0.000025662,
+          "usage": {
+            "inputTokens": 611,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "接続できない障害の確認先を尋ねており、影響で業務が停止している可能性があるため優先対応が必要です。",
+          "latencyMs": 4499,
+          "costUsd": 0.000669,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 76,
+        "text": "支払い済みなのに「未払い」と表示されて機能が制限されています。至急確認してください。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "rule": {
+        "urgency": "high"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "other": 0,
+              "technical": 0.02,
+              "account": 0,
+              "billing": 0.98,
+              "sales": 0
+            },
+            "confidence": 0.98
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "low": 0,
+              "high": 1,
+              "normal": 0
+            },
+            "confidence": 1
+          },
+          "latencyMs": 519,
+          "costUsd": 0.00002583,
+          "usage": {
+            "inputTokens": 615,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "high",
+          "reasoning": "支払い済みなのに未払い表示で機能が制限されており、サービス利用が停止しているため至急確認が必要です。",
+          "latencyMs": 4229,
+          "costUsd": 0.000683,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 77,
+        "text": "プラン変更したら、日割りで請求されますか？",
+        "department": "billing",
+        "urgency": "low",
+        "note": "プラン変更だが質問は請求計算"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.59
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.53
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "billing": 0.67,
+              "other": 0,
+              "sales": 0,
+              "account": 0.33,
+              "technical": 0
+            },
+            "confidence": 0.59
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0.31,
+              "low": 0.69,
+              "high": 0
+            },
+            "confidence": 0.53
+          },
+          "latencyMs": 532,
+          "costUsd": 0.000024948,
+          "usage": {
+            "inputTokens": 594,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "プラン変更時に日割り請求が発生するかを確認したい内容のため。",
+          "latencyMs": 3860,
+          "costUsd": 0.00053675,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 78,
+        "text": "見積書の有効期限が切れてしまいました。同じ条件で再発行できますか？",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.88
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "sales": 1,
+              "account": 0,
+              "technical": 0,
+              "other": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0.06,
+              "normal": 0.92,
+              "low": 0.02
+            },
+            "confidence": 0.88
+          },
+          "latencyMs": 340,
+          "costUsd": 0.000025452,
+          "usage": {
+            "inputTokens": 606,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "見積書の有効期限切れによる再発行依頼のため、営業が対応するのが適切です。",
+          "latencyMs": 3955,
+          "costUsd": 0.00062225,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 79,
+        "text": "ログイン画面に「メンテナンス中」と出たままです。予定の終了時刻を2時間過ぎています。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.89
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "sales": 0,
+              "account": 0,
+              "technical": 1,
+              "other": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "high": 0.93,
+              "normal": 0.07,
+              "low": 0
+            },
+            "confidence": 0.89
+          },
+          "latencyMs": 420,
+          "costUsd": 0.00002583,
+          "usage": {
+            "inputTokens": 615,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "ログインできず業務が停止しているため、対応が急ぎ必要です。",
+          "latencyMs": 4129,
+          "costUsd": 0.0006365,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 80,
+        "text": "データの保存場所は日本国内ですか？顧客に説明が必要です。",
+        "department": "sales",
+        "urgency": "normal",
+        "note": "既存か見込みか曖昧。導入説明用として営業"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.49
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.74
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "account": 0.12,
+              "billing": 0,
+              "other": 0.12,
+              "technical": 0.6,
+              "sales": 0.16
+            },
+            "confidence": 0.49
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.83,
+              "high": 0.03,
+              "low": 0.14
+            },
+            "confidence": 0.74
+          },
+          "latencyMs": 415,
+          "costUsd": 0.000025284,
+          "usage": {
+            "inputTokens": 602,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "顧客への説明のためデータ保管場所（国内/国外）の技術的・コンプライアンス確認が必要です。",
+          "latencyMs": 4931,
+          "costUsd": 0.00071775,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 81,
+        "text": "監査ログを1年分エクスポートしたいです。監査法人から求められています。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.93
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.8
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0,
+              "sales": 0,
+              "technical": 0.94,
+              "other": 0.02,
+              "account": 0.04
+            },
+            "confidence": 0.93
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.86,
+              "low": 0.01,
+              "high": 0.13
+            },
+            "confidence": 0.8
+          },
+          "latencyMs": 306,
+          "costUsd": 0.000025536,
+          "usage": {
+            "inputTokens": 608,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "監査法人の依頼により、1年分の監査ログをエクスポートする方法を知りたいという問い合わせです。",
+          "latencyMs": 5095,
+          "costUsd": 0.000759,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 82,
+        "text": "契約書の控えをもう一度送ってもらえますか？",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.68
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.74
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "other": 0.03,
+              "account": 0.75,
+              "sales": 0.01,
+              "technical": 0,
+              "billing": 0.21
+            },
+            "confidence": 0.68
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.83,
+              "high": 0,
+              "low": 0.17
+            },
+            "confidence": 0.74
+          },
+          "latencyMs": 483,
+          "costUsd": 0.000024948,
+          "usage": {
+            "inputTokens": 594,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "既存契約書の控えの再送依頼のため、アカウント部門で通常対応。",
+          "latencyMs": 7259,
+          "costUsd": 0.00097925,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 83,
+        "text": "請求先の部署を経理部から総務部に変更したいです。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.71
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.86
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "technical": 0,
+              "account": 0.22,
+              "sales": 0,
+              "other": 0,
+              "billing": 0.78
+            },
+            "confidence": 0.71
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.09,
+              "normal": 0.91,
+              "high": 0
+            },
+            "confidence": 0.86
+          },
+          "latencyMs": 6770,
+          "costUsd": 0.000025074,
+          "usage": {
+            "inputTokens": 597,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "請求先部署の変更はアカウント情報の更新に該当するため、アカウント部署で対応します。",
+          "latencyMs": 5168,
+          "costUsd": 0.0008055,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 84,
+        "text": "試用期間が終わると自動で有料になりますか？",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.84
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.45
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "billing": 0.07,
+              "technical": 0,
+              "account": 0.06,
+              "other": 0,
+              "sales": 0.87
+            },
+            "confidence": 0.84
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0.01,
+              "low": 0.63,
+              "normal": 0.36
+            },
+            "confidence": 0.45
+          },
+          "latencyMs": 484,
+          "costUsd": 0.000024948,
+          "usage": {
+            "inputTokens": 594,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "トライアル終了後に自動で有料プランに移行するか確認したいという問い合わせです。",
+          "latencyMs": 4643,
+          "costUsd": 0.00058875,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 85,
+        "text": "大至急！顧客情報が外部から見られる状態になっているかもしれません。共有リンクの設定を確認したいです。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "rule": {
+        "urgency": "high"
+      },
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.87
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "other": 0.01,
+              "account": 0.09,
+              "sales": 0,
+              "technical": 0.9,
+              "billing": 0
+            },
+            "confidence": 0.87
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0,
+              "high": 1,
+              "low": 0
+            },
+            "confidence": 1
+          },
+          "latencyMs": 326,
+          "costUsd": 0.000026208,
+          "usage": {
+            "inputTokens": 624,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "high",
+          "reasoning": "顧客データが外部に見えている可能性があり、共有リンク設定を直ちに確認する必要があります。",
+          "latencyMs": 4637,
+          "costUsd": 0.00061525,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 86,
+        "text": "インボイス対応の請求書フォーマットで、税率ごとの内訳が出るようにできますか？当社の請求書発行に使っています。",
+        "department": "technical",
+        "urgency": "normal",
+        "note": "インボイスの語があるが、機能の設定の質問"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.4
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.65
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "sales": 0,
+              "technical": 0.47,
+              "account": 0,
+              "billing": 0.53,
+              "other": 0
+            },
+            "confidence": 0.4
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.77,
+              "high": 0,
+              "low": 0.23
+            },
+            "confidence": 0.65
+          },
+          "latencyMs": 326,
+          "costUsd": 0.000026334,
+          "usage": {
+            "inputTokens": 627,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "インボイス制度対応のため、請求書に税率ごとの内訳を表示できるかを確認したいとのお問い合わせです。",
+          "latencyMs": 4599,
+          "costUsd": 0.0006345,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 87,
+        "text": "利用規約の改定内容について質問があります。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.45
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.8
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "account": 0.5700000000000001,
+              "billing": 0,
+              "sales": 0,
+              "other": 0.43,
+              "technical": 0
+            },
+            "confidence": 0.45
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0.13,
+              "high": 0,
+              "low": 0.87
+            },
+            "confidence": 0.8
+          },
+          "latencyMs": 350,
+          "costUsd": 0.000024948,
+          "usage": {
+            "inputTokens": 594,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "利用規約は契約内容の変更に関するため、アカウント部門で対応します。",
+          "latencyMs": 4624,
+          "costUsd": 0.0006835,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 88,
+        "text": "モバイルアプリでオフラインのまま作業することはできますか？",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.8
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "sales": 0,
+              "other": 0,
+              "technical": 1,
+              "account": 0,
+              "billing": 0
+            },
+            "confidence": 0.99
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "normal": 0.13,
+              "high": 0,
+              "low": 0.87
+            },
+            "confidence": 0.8
+          },
+          "latencyMs": 410,
+          "costUsd": 0.000025284,
+          "usage": {
+            "inputTokens": 602,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "モバイルアプリがオフラインで作業できるかどうかを確認したい問い合わせ。",
+          "latencyMs": 4089,
+          "costUsd": 0.00055975,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 89,
+        "text": "年度末に向けてユーザーを一時的に倍に増やしたいのですが、期間限定の契約はありますか？",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.83
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.89
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0,
+              "sales": 0.13,
+              "account": 0.87,
+              "other": 0,
+              "billing": 0
+            },
+            "confidence": 0.83
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.07,
+              "normal": 0.92,
+              "high": 0.01
+            },
+            "confidence": 0.89
+          },
+          "latencyMs": 6590,
+          "costUsd": 0.00002583,
+          "usage": {
+            "inputTokens": 615,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "年度末に向けた一時的なユーザー増加のための期間限定契約の可否と購入オプションを問い合わせています。",
+          "latencyMs": 4861,
+          "costUsd": 0.0008485,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 90,
+        "text": "返金の手続きはどのくらいで完了しますか？先週申請しました。",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.88
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "sales": 0,
+              "other": 0,
+              "billing": 1,
+              "technical": 0,
+              "account": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.92,
+              "high": 0.07,
+              "low": 0.01
+            },
+            "confidence": 0.88
+          },
+          "latencyMs": 382,
+          "costUsd": 0.000025284,
+          "usage": {
+            "inputTokens": 602,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "normal",
+          "reasoning": "返金は請求関連の案件で、先週申請済みのため緊急性は高くないと判断しました。",
+          "latencyMs": 5168,
+          "costUsd": 0.0007345,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 91,
+        "text": "チームメンバーを招待するメールが相手に届いていないようです。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.41
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.75
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0,
+              "technical": 0.54,
+              "account": 0.46,
+              "other": 0,
+              "sales": 0
+            },
+            "confidence": 0.41
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.84,
+              "low": 0,
+              "high": 0.16
+            },
+            "confidence": 0.75
+          },
+          "latencyMs": 335,
+          "costUsd": 0.000025326,
+          "usage": {
+            "inputTokens": 603,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "チーム招待メールが届かないため、招待機能の技術的な確認が必要です。",
+          "latencyMs": 3882,
+          "costUsd": 0.000652,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 92,
+        "text": "管理画面の言語を英語に切り替えられますか？海外拠点のメンバーが使います。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.96
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.57
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "sales": 0,
+              "billing": 0,
+              "account": 0.03,
+              "technical": 0.97,
+              "other": 0
+            },
+            "confidence": 0.96
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.71,
+              "low": 0.29,
+              "high": 0
+            },
+            "confidence": 0.57
+          },
+          "latencyMs": 364,
+          "costUsd": 0.00002562,
+          "usage": {
+            "inputTokens": 610,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "管理画面の表示言語切替（設定方法）に関する問い合わせのため。",
+          "latencyMs": 5513,
+          "costUsd": 0.0006325,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 93,
+        "text": "決算期の変更に伴い、請求の締め日を変えたいです。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.9
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.92
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "sales": 0,
+              "billing": 0.92,
+              "account": 0.08,
+              "technical": 0,
+              "other": 0
+            },
+            "confidence": 0.9
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.95,
+              "high": 0,
+              "low": 0.05
+            },
+            "confidence": 0.92
+          },
+          "latencyMs": 6308,
+          "costUsd": 0.000025074,
+          "usage": {
+            "inputTokens": 597,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "normal",
+          "reasoning": "決算期の変更に伴い、請求の締め日を変更したいとのリクエストです。",
+          "latencyMs": 4807,
+          "costUsd": 0.00076,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 94,
+        "text": "メールアドレスを間違えて登録してしまい、アカウントにアクセスできません。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.5
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.29
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "account",
+            "probabilities": {
+              "technical": 0.4,
+              "sales": 0,
+              "other": 0,
+              "account": 0.6,
+              "billing": 0
+            },
+            "confidence": 0.5
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "normal": 0.47,
+              "high": 0.53,
+              "low": 0
+            },
+            "confidence": 0.29
+          },
+          "latencyMs": 833,
+          "costUsd": 0.000025578,
+          "usage": {
+            "inputTokens": 609,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "high",
+          "reasoning": "メールアドレスを間違えて登録したためアカウントにアクセスできず、早急な対応が必要です。",
+          "latencyMs": 4952,
+          "costUsd": 0.00072225,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 95,
+        "text": "お問い合わせフォームから送った件、1週間返事がありません。",
+        "department": "other",
+        "urgency": "normal",
+        "note": "元の用件が不明なのでその他"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.75
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.97
+        }
+      },
+      "gpt": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "other",
+            "probabilities": {
+              "technical": 0.04,
+              "sales": 0.16,
+              "account": 0,
+              "other": 0.8,
+              "billing": 0
+            },
+            "confidence": 0.75
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "low": 0.02,
+              "normal": 0.98,
+              "high": 0
+            },
+            "confidence": 0.97
+          },
+          "latencyMs": 349,
+          "costUsd": 0.000025284,
+          "usage": {
+            "inputTokens": 602,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "other",
+          "urgency": "normal",
+          "reasoning": "お問い合わせフォームで送った問い合わせに1週間返信がないため、対応状況の確認とフォローアップを希望しています。",
+          "latencyMs": 5538,
+          "costUsd": 0.00084825,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 96,
+        "text": "来週から新しい部署でも使いたいので、ライセンスを10個追加購入したいです。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.81
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.98
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "billing": 0,
+              "sales": 0.85,
+              "technical": 0,
+              "other": 0,
+              "account": 0.15
+            },
+            "confidence": 0.81
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "normal": 0.98,
+              "low": 0.01,
+              "high": 0.01
+            },
+            "confidence": 0.98
+          },
+          "latencyMs": 493,
+          "costUsd": 0.00002562,
+          "usage": {
+            "inputTokens": 610,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "来週から新部署で利用開始したいため、ライセンス10件の追加購入に関する見積・手続きが必要です。",
+          "latencyMs": 5025,
+          "costUsd": 0.00079675,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 97,
+        "text": "支払いに使っている法人カードを不正利用されたので、至急カードを止めて別のカードに切り替えたいです。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "rule": {
+        "urgency": "high"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      },
+      "gpt": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "billing",
+            "probabilities": {
+              "account": 0.01,
+              "billing": 0.99,
+              "other": 0,
+              "sales": 0,
+              "technical": 0
+            },
+            "confidence": 0.98
+          },
+          "urgency": {
+            "choice": "high",
+            "probabilities": {
+              "high": 1,
+              "low": 0,
+              "normal": 0
+            },
+            "confidence": 1
+          },
+          "latencyMs": 7187,
+          "costUsd": 0.000026124,
+          "usage": {
+            "inputTokens": 622,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "billing",
+          "urgency": "high",
+          "reasoning": "法人カードが不正利用されたため、直ちに支払いカードを停止して別カードへ切り替えたい。",
+          "latencyMs": 4992,
+          "costUsd": 0.000675,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 98,
+        "text": "タスクの期限が前日になると通知が来る設定にしたいです。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.3
+        }
+      },
+      "gpt": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "technical",
+            "probabilities": {
+              "technical": 1,
+              "account": 0,
+              "other": 0,
+              "sales": 0,
+              "billing": 0
+            },
+            "confidence": 1
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "high": 0,
+              "low": 0.53,
+              "normal": 0.47
+            },
+            "confidence": 0.3
+          },
+          "latencyMs": 461,
+          "costUsd": 0.0000252,
+          "usage": {
+            "inputTokens": 600,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "technical",
+          "urgency": "normal",
+          "reasoning": "User wants notifications that alert one day before a task's deadline.",
+          "latencyMs": 3527,
+          "costUsd": 0.0005515,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 99,
+        "text": "御社のツールを使ったセミナーを社内でやりたいので、講師をお願いできますか？費用も知りたいです。",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.96
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.79
+        }
+      },
+      "gpt": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "sales": 0.97,
+              "technical": 0,
+              "billing": 0,
+              "account": 0,
+              "other": 0.03
+            },
+            "confidence": 0.96
+          },
+          "urgency": {
+            "choice": "normal",
+            "probabilities": {
+              "high": 0,
+              "normal": 0.86,
+              "low": 0.14
+            },
+            "confidence": 0.79
+          },
+          "latencyMs": 416,
+          "costUsd": 0.00002604,
+          "usage": {
+            "inputTokens": 620,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "sales",
+          "urgency": "normal",
+          "reasoning": "社内向けセミナーの講師手配と費用見積りの問い合わせのため。",
+          "latencyMs": 5170,
+          "costUsd": 0.0006315,
+          "apiErrors": []
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 100,
+        "text": "急ぎではないのですが、デモで見た自動化機能は今のプランでも使えますか？",
+        "department": "sales",
+        "urgency": "low",
+        "note": "デモの語があり既存顧客にも読める"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.33
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.99
+        }
+      },
+      "gpt": {
+        "department": "account",
+        "urgency": "low"
+      },
+      "raw": {
+        "jev": {
+          "department": {
+            "choice": "sales",
+            "probabilities": {
+              "technical": 0.29,
+              "sales": 0.46,
+              "account": 0.24,
+              "other": 0,
+              "billing": 0.01
+            },
+            "confidence": 0.33
+          },
+          "urgency": {
+            "choice": "low",
+            "probabilities": {
+              "low": 1,
+              "normal": 0,
+              "high": 0
+            },
+            "confidence": 0.99
+          },
+          "latencyMs": 321,
+          "costUsd": 0.000025536,
+          "usage": {
+            "inputTokens": 608,
+            "outputTokens": 88
+          },
+          "apiErrors": []
+        },
+        "gpt": {
+          "department": "account",
+          "urgency": "low",
+          "reasoning": "デモで見た自動化機能が現在のプランで利用可能か確認したい。",
+          "latencyMs": 5068,
+          "costUsd": 0.00071975,
+          "apiErrors": []
+        }
+      }
+    }
+  ]
+}
