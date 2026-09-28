@@ -35,7 +35,10 @@ export function createJevPlayer({
           move: {
             type: 'choice' as const,
             instructions: jevInstructions(color, hints, strictWarning),
-            criteria: buildCriteria(board, color, criteria),
+            // Only the offered moves: a filter may have removed some legal moves.
+            criteria: Object.fromEntries(
+              Object.entries(buildCriteria(board, color, criteria)).filter(([move]) => legalMoves.includes(move)),
+            ),
           },
         },
       };

@@ -248,7 +248,7 @@ function parseRun(text) {
 
 function apiCalls(turn) {
   const d = turn.detail;
-  if (!d || d.player === 'rule') return 0;
+  if (!d || d.player === 'rule' || d.player === 'filter') return 0;
   return d.player === 'gpt' ? d.attempts.length : 1;
 }
 
@@ -540,6 +540,8 @@ function renderDetail(g, t, before) {
   else if (d.player === 'jev') parts.push(...renderJev(t, d));
   else if (d.player === 'gpt') parts.push(...renderGpt(t, d));
   else if (d.player === 'rule') parts.push(...renderRule(t, d));
+  else if (d.player === 'filter') parts.push(h('div', { class: 'note' }, d.filter.reason === 'corner' ? 'ルールで隅を取りました。Jev は呼んでいません。' : '候補が 1 つに絞られたので、ルールで決めました。Jev は呼んでいません。'));
+  if (d?.filter && d.filter.reason !== 'none') parts.splice(2, 0, h('div', { class: 'meta' }, `ルールで除外: ${d.filter.excluded.join(', ')}（${d.filter.reason === 'corner' ? '隅を優先' : '相手に隅を渡す手'}）→ 候補 ${d.filter.moves.join(', ')}`));
   if (d) parts.push(h('details', null, h('summary', null, 'ターンの生データ（JSON）'), h('pre', null, JSON.stringify(t, null, 2))));
   return h('div', { class: 'detail' }, parts);
 }

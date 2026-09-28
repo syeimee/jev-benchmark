@@ -7,6 +7,7 @@ import { type GameRecord, playGame, randomOpening } from './match.js';
 import type { Color } from './othello.js';
 import { createGptPlayer } from './players/gpt.js';
 import { type JevPolicy, createJevPlayer } from './players/jev.js';
+import { createFilterPlayer } from './players/filter.js';
 import { createRandomPlayer } from './players/random.js';
 import { createRulePlayer } from './players/rule.js';
 import type { Player } from './players/types.js';
@@ -16,11 +17,14 @@ const USAGE = `Usage: npm run bench -- [options]
 
   --p1 <player>              Player 1 (default: jev). Plays black in game 1.
   --p2 <player>              Player 2 (default: gpt).
-                             <player> = jev | gpt | rule | random, optionally with a
+                             <player> = jev | gpt | rule | random | filter-jev | filter-random,
+                             optionally with a
                              criteria version: jev:v2, rule:v1 (default v1). For gpt the
                              version only matters with --annotate-moves.
                              jev/gpt also accept ablations: v1+corner, v1+stable+reply, ...
                              (extras: corner, stable, reply, discs; v2 = all). rule: v1|v2.
+                             filter-*: rules take corners and drop corner-giving moves,
+                             then Jev / random picks among the rest.
   --games <n>                Number of games (default: 2).
   --swap <on|off>            Alternate colors every game (default: on).
   --random-opening <n>       Play n random plies before handing over (default: 4).
@@ -36,7 +40,7 @@ const USAGE = `Usage: npm run bench -- [options]
   --capture                  After each game, save one PNG per turn to captures/<run name>/.
   --verbose                  Print every turn.`;
 
-type PlayerKind = 'jev' | 'gpt' | 'rule' | 'random';
+type PlayerKind = 'jev' | 'gpt' | 'rule' | 'random' | 'filter-jev' | 'filter-random';
 interface PlayerSpec {
   kind: PlayerKind;
   criteria: CriteriaVersion;
@@ -45,7 +49,7 @@ interface PlayerSpec {
 function parsePlayer(value: string, flag: string): PlayerSpec {
   const [kind, criteria = 'v1', ...rest] = value.split(':');
   if (rest.length > 0) fail(`--${flag}: expected <kind>[:<version>], got ${value}`);
-  const parsedKind = oneOf(kind!, ['jev', 'gpt', 'rule', 'random'] as const, flag);
+  const parsedKind = oneOf(kind!, ['jev', 'gpt', 'rule', 'random', 'filter-jev', 'filter-random'] as const, flag);
   if (parsedKind === 'rule') oneOf(criteria, ['v1', 'v2'] as const, flag);
   else if (!parseCriteria(criteria)) fail(`--${flag}: unknown criteria version ${criteria}`);
   return { kind: parsedKind, criteria };
@@ -100,7 +104,7 @@ const seed = values.seed === undefined ? Date.now() : Number(values.seed);
 if (!Number.isInteger(seed)) fail('--seed must be an integer');
 const out = values.out ?? `results/${new Date().toISOString().replace(/[:.]/g, '-')}.jsonl`;
 
-const usesApi = [p1Spec, p2Spec].some((p) => p.kind === 'jev' || p.kind === 'gpt');
+const usesApi = [p1Spec, p2Spec].some((p) => ['jev', 'gpt', 'filter-jev'].includes(p.kind));
 if (usesApi && !process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
   fail('AI_GATEWAY_API_KEY is not set (put it in .env or the environment).');
 }
@@ -115,6 +119,10 @@ function createPlayer({ kind, criteria }: PlayerSpec, rng: Rng): Player {
       return createRulePlayer(criteria as 'v1' | 'v2');
     case 'random':
       return createRandomPlayer(rng);
+    case 'filter-jev':
+      return createFilterPlayer(createPlayer({ kind: 'jev', criteria }, rng));
+    case 'filter-random':
+      return createFilterPlayer(createRandomPlayer(rng));
   }
 }
 

@@ -3,7 +3,10 @@ import type { Board, Color } from '../othello.js';
 export interface TurnContext {
   board: Board;
   color: Color;
-  /** Legal moves as coordinates, in row-major order. Always 2 or more. */
+  /**
+   * Moves the player may choose from, in row-major order. Always 2 or more.
+   * All legal moves, or a rule-filtered subset (see players/filter.ts).
+   */
   legalMoves: string[];
 }
 
