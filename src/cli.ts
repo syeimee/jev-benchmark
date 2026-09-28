@@ -7,6 +7,7 @@ import { type GameRecord, playGame, randomOpening } from './match.js';
 import type { Color } from './othello.js';
 import { createGptPlayer } from './players/gpt.js';
 import { type JevPolicy, createJevPlayer } from './players/jev.js';
+import { createEscalatingPlayer } from './players/escalate.js';
 import { createFilterPlayer } from './players/filter.js';
 import { createRandomPlayer } from './players/random.js';
 import { createRulePlayer } from './players/rule.js';
@@ -17,7 +18,8 @@ const USAGE = `Usage: npm run bench -- [options]
 
   --p1 <player>              Player 1 (default: jev). Plays black in game 1.
   --p2 <player>              Player 2 (default: gpt).
-                             <player> = jev | gpt | rule | random | filter-jev | filter-random,
+                             <player> = jev | gpt | rule | random | filter-jev | filter-random |
+                             escalate,
                              optionally with a
                              criteria version: jev:v2, rule:v1 (default v1). For gpt the
                              version only matters with --annotate-moves.
@@ -25,6 +27,7 @@ const USAGE = `Usage: npm run bench -- [options]
                              (extras: corner, stable, reply, discs; v2 = all). rule: v1|v2.
                              filter-*: rules take corners and drop corner-giving moves,
                              then Jev / random picks among the rest.
+                             escalate: Jev first; GPT decides when Jev's confidence is low.
   --games <n>                Number of games (default: 2).
   --swap <on|off>            Alternate colors every game (default: on).
   --random-opening <n>       Play n random plies before handing over (default: 4).
@@ -32,6 +35,7 @@ const USAGE = `Usage: npm run bench -- [options]
   --hints <on|off>           Include strategy hints for Jev and GPT (default: on).
   --policy <argmax|sample>   Jev move selection (default: argmax).
   --strict-warning           Tell Jev to never pick a WARNING move when a safe one exists.
+  --escalate-below <x>       escalate: hand the move to GPT when Jev's confidence < x (default: 0.4).
   --annotate-moves           Give GPT the same per-move descriptions Jev gets as criteria.
   --jev-model <id>           Gateway evaluation model (default: typesafe-ai/jev).
   --gpt-model <id>           Gateway language model (default: openai/gpt-5-mini).
@@ -40,7 +44,7 @@ const USAGE = `Usage: npm run bench -- [options]
   --capture                  After each game, save one PNG per turn to captures/<run name>/.
   --verbose                  Print every turn.`;
 
-type PlayerKind = 'jev' | 'gpt' | 'rule' | 'random' | 'filter-jev' | 'filter-random';
+type PlayerKind = 'jev' | 'gpt' | 'rule' | 'random' | 'filter-jev' | 'filter-random' | 'escalate';
 interface PlayerSpec {
   kind: PlayerKind;
   criteria: CriteriaVersion;
@@ -49,7 +53,11 @@ interface PlayerSpec {
 function parsePlayer(value: string, flag: string): PlayerSpec {
   const [kind, criteria = 'v1', ...rest] = value.split(':');
   if (rest.length > 0) fail(`--${flag}: expected <kind>[:<version>], got ${value}`);
-  const parsedKind = oneOf(kind!, ['jev', 'gpt', 'rule', 'random', 'filter-jev', 'filter-random'] as const, flag);
+  const parsedKind = oneOf(
+    kind!,
+    ['jev', 'gpt', 'rule', 'random', 'filter-jev', 'filter-random', 'escalate'] as const,
+    flag,
+  );
   if (parsedKind === 'rule') oneOf(criteria, ['v1', 'v2'] as const, flag);
   else if (!parseCriteria(criteria)) fail(`--${flag}: unknown criteria version ${criteria}`);
   return { kind: parsedKind, criteria };
@@ -75,6 +83,7 @@ const { values } = parseArgs({
     hints: { type: 'string', default: 'on' },
     policy: { type: 'string', default: 'argmax' },
     'strict-warning': { type: 'boolean', default: false },
+    'escalate-below': { type: 'string', default: '0.4' },
     'annotate-moves': { type: 'boolean', default: false },
     'jev-model': { type: 'string', default: 'typesafe-ai/jev' },
     'gpt-model': { type: 'string', default: 'openai/gpt-5-mini' },
@@ -93,6 +102,8 @@ if (values.help) {
 
 const p1Spec = parsePlayer(values.p1, 'p1');
 const p2Spec = parsePlayer(values.p2, 'p2');
+const escalateBelow = Number(values['escalate-below']);
+if (!(escalateBelow >= 0 && escalateBelow <= 1)) fail('--escalate-below must be between 0 and 1');
 const openingPlies = Number(values['random-opening']);
 if (!Number.isInteger(openingPlies) || openingPlies < 0) fail('--random-opening must be a non-negative integer');
 const games = Number(values.games);
@@ -104,7 +115,7 @@ const seed = values.seed === undefined ? Date.now() : Number(values.seed);
 if (!Number.isInteger(seed)) fail('--seed must be an integer');
 const out = values.out ?? `results/${new Date().toISOString().replace(/[:.]/g, '-')}.jsonl`;
 
-const usesApi = [p1Spec, p2Spec].some((p) => ['jev', 'gpt', 'filter-jev'].includes(p.kind));
+const usesApi = [p1Spec, p2Spec].some((p) => ['jev', 'gpt', 'filter-jev', 'escalate'].includes(p.kind));
 if (usesApi && !process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
   fail('AI_GATEWAY_API_KEY is not set (put it in .env or the environment).');
 }
@@ -123,6 +134,12 @@ function createPlayer({ kind, criteria }: PlayerSpec, rng: Rng): Player {
       return createFilterPlayer(createPlayer({ kind: 'jev', criteria }, rng));
     case 'filter-random':
       return createFilterPlayer(createRandomPlayer(rng));
+    case 'escalate':
+      return createEscalatingPlayer(
+        createPlayer({ kind: 'jev', criteria }, rng),
+        createPlayer({ kind: 'gpt', criteria }, rng),
+        escalateBelow,
+      );
   }
 }
 

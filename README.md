@@ -25,7 +25,7 @@ npm run bench -- --help
 - プレイヤー: `jev` / `gpt` / `rule`（ルールベース）/ `random`。`:v2` を付けると criteria v2（先読みの結果入り）を使う。
 - 最初の 4 手はランダム（`--random-opening`）。同じ序盤を先後入れ替えて 2 局ずつ打つ。
 
-結果は `results/<timestamp>.jsonl` に 1 手ずつ追記される。1 手ごとの画像が欲しいときは `npm run capture -- <jsonl>`。
+結果は `results/<timestamp>.jsonl` に 1 手ずつ追記される（リポジトリに含める）。これまでの試行と結果は [docs/experiments.md](docs/experiments.md)。1 手ごとの画像が欲しいときは `npm run capture -- <jsonl>`。
 
 ## ビューア
 

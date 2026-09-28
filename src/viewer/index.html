@@ -249,7 +249,8 @@ function parseRun(text) {
 function apiCalls(turn) {
   const d = turn.detail;
   if (!d || d.player === 'rule' || d.player === 'filter') return 0;
-  return d.player === 'gpt' ? d.attempts.length : 1;
+  const escalated = d.escalation?.escalated ? 1 : 0;
+  return (d.player === 'gpt' ? d.attempts.length : 1) + escalated;
 }
 
 function playerStats(run) {
@@ -329,9 +330,11 @@ function renderSummary(run) {
     h('div', { class: 'big' }, `${st.w}勝 ${st.l}敗 ${st.d}分`),
     h('div', { class: 'sub' },
       `勝率 ${st.played ? fmt.pct(st.w / st.played) : '-'} · 平均石差 ${st.played ? fmt.signed(+(st.diff / st.played).toFixed(1)) : '-'} · 反則負け ${st.illegal}`),
-    h('div', { class: 'sub' },
-      `API呼び出し ${st.calls} 回 · 平均 ${st.calls ? fmt.ms(Math.round(st.latency / st.calls)) : '-'} · tokens in ${fmt.num(st.inTok)} / out ${fmt.num(st.outTok)}` +
-      (st.retries ? ` · 再試行 ${st.retries}` : '')),
+    h('div', { class: 'sub' }, st.calls === 0
+      // rule / random players decide in code, so there is nothing to average.
+      ? 'API 呼び出しなし（コードで判断）'
+      : `API呼び出し ${st.calls} 回 · 平均 ${fmt.ms(Math.round(st.latency / st.calls))} · tokens in ${fmt.num(st.inTok)} / out ${fmt.num(st.outTok)}` +
+        (st.retries ? ` · 再試行 ${st.retries}` : '')),
   ));
   const done = run.games.filter((g) => g.end).length;
   return h('section', { class: 'card' },
@@ -541,6 +544,13 @@ function renderDetail(g, t, before) {
   else if (d.player === 'gpt') parts.push(...renderGpt(t, d));
   else if (d.player === 'rule') parts.push(...renderRule(t, d));
   else if (d.player === 'filter') parts.push(h('div', { class: 'note' }, d.filter.reason === 'corner' ? 'ルールで隅を取りました。Jev は呼んでいません。' : '候補が 1 つに絞られたので、ルールで決めました。Jev は呼んでいません。'));
+  if (d?.escalation) {
+    const e = d.escalation;
+    const conf = e.confidence == null ? '不明' : e.confidence.toFixed(2);
+    parts.splice(2, 0, h('div', { class: e.escalated ? 'warn' : 'note', style: 'margin-bottom:12px' }, e.escalated
+      ? `Jev の confidence ${conf} < ${e.threshold} のため GPT に回しました。Jev の案は ${e.firstMove ?? '-'}、GPT の手は ${t.move ?? '-'}${e.firstMove === t.move ? '（一致）' : ''}。`
+      : `Jev の confidence ${conf} ≥ ${e.threshold} のため、Jev の手をそのまま採用しました。`));
+  }
   if (d?.filter && d.filter.reason !== 'none') parts.splice(2, 0, h('div', { class: 'meta' }, `ルールで除外: ${d.filter.excluded.join(', ')}（${d.filter.reason === 'corner' ? '隅を優先' : '相手に隅を渡す手'}）→ 候補 ${d.filter.moves.join(', ')}`));
   if (d) parts.push(h('details', null, h('summary', null, 'ターンの生データ（JSON）'), h('pre', null, JSON.stringify(t, null, 2))));
   return h('div', { class: 'detail' }, parts);

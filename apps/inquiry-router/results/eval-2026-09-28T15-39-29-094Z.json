@@ -1,0 +1,2542 @@
+{
+  "createdAt": "2026-09-28T15:39:29.094Z",
+  "data": "apps/inquiry-router/data/inquiries.jsonl",
+  "n": 100,
+  "accuracy": {
+    "keyword": {
+      "department": 0.6,
+      "urgency": 0.46,
+      "both": 0.29,
+      "n": 100
+    },
+    "jev": {
+      "department": 0.96,
+      "urgency": 0.71,
+      "both": 0.68,
+      "n": 100
+    },
+    "rulesThenJev": {
+      "department": 0.92,
+      "urgency": 0.71,
+      "both": 0.64,
+      "n": 100
+    }
+  },
+  "rulePrecision": {
+    "department": {
+      "hits": 16,
+      "correct": 12
+    },
+    "urgency": {
+      "hits": 4,
+      "correct": 4
+    }
+  },
+  "confidenceBands": {
+    "department": [
+      {
+        "lo": 0,
+        "hi": 0.2,
+        "n": 0,
+        "accuracy": null
+      },
+      {
+        "lo": 0.2,
+        "hi": 0.4,
+        "n": 2,
+        "accuracy": 1
+      },
+      {
+        "lo": 0.4,
+        "hi": 0.6,
+        "n": 10,
+        "accuracy": 0.8
+      },
+      {
+        "lo": 0.6,
+        "hi": 0.8,
+        "n": 11,
+        "accuracy": 0.9090909090909091
+      },
+      {
+        "lo": 0.8,
+        "hi": 1,
+        "n": 77,
+        "accuracy": 0.987012987012987
+      }
+    ],
+    "urgency": [
+      {
+        "lo": 0,
+        "hi": 0.2,
+        "n": 0,
+        "accuracy": null
+      },
+      {
+        "lo": 0.2,
+        "hi": 0.4,
+        "n": 17,
+        "accuracy": 0.5294117647058824
+      },
+      {
+        "lo": 0.4,
+        "hi": 0.6,
+        "n": 10,
+        "accuracy": 0.4
+      },
+      {
+        "lo": 0.6,
+        "hi": 0.8,
+        "n": 24,
+        "accuracy": 0.7916666666666666
+      },
+      {
+        "lo": 0.8,
+        "hi": 1,
+        "n": 49,
+        "accuracy": 0.7959183673469388
+      }
+    ]
+  },
+  "thresholds": [
+    {
+      "threshold": 0,
+      "coverage": 1,
+      "autoAccuracy": {
+        "department": 0.92,
+        "urgency": 0.71,
+        "both": 0.64,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.2,
+      "coverage": 1,
+      "autoAccuracy": {
+        "department": 0.92,
+        "urgency": 0.71,
+        "both": 0.64,
+        "n": 100
+      }
+    },
+    {
+      "threshold": 0.3,
+      "coverage": 0.93,
+      "autoAccuracy": {
+        "department": 0.9139784946236559,
+        "urgency": 0.7419354838709677,
+        "both": 0.6666666666666666,
+        "n": 93
+      }
+    },
+    {
+      "threshold": 0.4,
+      "coverage": 0.83,
+      "autoAccuracy": {
+        "department": 0.9156626506024096,
+        "urgency": 0.7469879518072289,
+        "both": 0.6746987951807228,
+        "n": 83
+      }
+    },
+    {
+      "threshold": 0.5,
+      "coverage": 0.71,
+      "autoAccuracy": {
+        "department": 0.9295774647887324,
+        "urgency": 0.7605633802816901,
+        "both": 0.704225352112676,
+        "n": 71
+      }
+    },
+    {
+      "threshold": 0.6,
+      "coverage": 0.66,
+      "autoAccuracy": {
+        "department": 0.9242424242424242,
+        "urgency": 0.7878787878787878,
+        "both": 0.7272727272727273,
+        "n": 66
+      }
+    },
+    {
+      "threshold": 0.7,
+      "coverage": 0.58,
+      "autoAccuracy": {
+        "department": 0.9482758620689655,
+        "urgency": 0.7931034482758621,
+        "both": 0.7586206896551724,
+        "n": 58
+      }
+    },
+    {
+      "threshold": 0.8,
+      "coverage": 0.42,
+      "autoAccuracy": {
+        "department": 0.9523809523809523,
+        "urgency": 0.8095238095238095,
+        "both": 0.7857142857142857,
+        "n": 42
+      }
+    }
+  ],
+  "costUsd": 0.0025449480000000004,
+  "latencyMs": {
+    "jevMedian": 334,
+    "gptMedian": 0
+  },
+  "rows": [
+    {
+      "item": {
+        "id": 1,
+        "text": "先月分の請求書を再発行していただけますか。経理に提出する必要があります。",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "billing"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.98
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 2,
+        "text": "クレジットカードの有効期限が切れたので、支払い方法を更新したいです。どこから変更できますか？",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.6
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 3,
+        "text": "今月の利用料金が二重に引き落とされています。確認のうえ返金をお願いします。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.69
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 4,
+        "text": "請求書の宛名を株式会社から合同会社に変えてほしいです。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "billing"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.57
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.83
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 5,
+        "text": "年払いに切り替えると割引はありますか？今は月払いで使っています。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.73
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.71
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 6,
+        "text": "銀行振込で支払いたいのですが、振込先口座を教えてください。支払期日が明日です。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "low"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.97
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 7,
+        "text": "領収書をPDFでダウンロードする方法を教えてください。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "low"
+      },
+      "rule": {
+        "department": "billing"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.84
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.43
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 8,
+        "text": "適格請求書（インボイス）の登録番号が請求書に記載されていません。",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "billing"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.95
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.75
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 9,
+        "text": "ユーザーを3人減らしたのに、請求額が変わっていません。",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.84
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.27
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 10,
+        "text": "カード決済がエラーになり支払いが完了しません。このままだとサービスが止まると通知が来ています。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.94
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 11,
+        "text": "請求画面を開くと真っ白になって何も表示されません。ブラウザはChromeです。",
+        "department": "technical",
+        "urgency": "normal",
+        "note": "キーワードは請求だが、中身は表示の不具合"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.57
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 12,
+        "text": "社員全員がログインできません。朝から業務が完全に止まっています。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 13,
+        "text": "CSVの取り込みで文字化けします。Excelで保存したファイルです。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.81
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 14,
+        "text": "スマホアプリとPCでデータが同期されません。昨日から発生しています。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.38
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 15,
+        "text": "ダッシュボードの表示がとても遅く、開くのに30秒以上かかります。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.76
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 16,
+        "text": "APIでタスクを作成すると500エラーが返ってきます。リクエスト例を添付します。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.41
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 17,
+        "text": "Slack連携の通知が届かなくなりました。設定は変えていません。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.78
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 18,
+        "text": "二段階認証のスマホを紛失してログインできなくなりました。今日の会議資料がすべて中に入っています。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.97
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 19,
+        "text": "ガントチャートで依存関係を設定する方法を知りたいです。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.76
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 20,
+        "text": "削除したプロジェクトを復元できますか？誤って消してしまいました。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.93
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 21,
+        "text": "パスワードリセットのメールが届きません。迷惑メールフォルダも確認しました。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.49
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 22,
+        "text": "ファイルをアップロードすると「容量制限を超えています」と出ますが、まだ半分も使っていないはずです。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.97
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.66
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 23,
+        "text": "見知らぬIPアドレスからのログイン通知が来ました。不正アクセスではないか心配です。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.92
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.99
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 24,
+        "text": "繰り返しタスクの設定で、毎月最終営業日を指定することはできますか？",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.74
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 25,
+        "text": "Googleカレンダー連携を設定したのに、予定が反映されません。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.94
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 26,
+        "text": "本番環境のWebhookが今朝から一切送られてきません。顧客への自動通知が止まっています。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 27,
+        "text": "エクスポートしたPDFのレイアウトが崩れています。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.94
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 28,
+        "text": "iPhoneアプリが起動直後に落ちます。iOS 19にアップデートしてからです。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.73
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 29,
+        "text": "検索で過去のコメントがヒットしません。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.8
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 30,
+        "text": "SSOの設定を変えたら管理者を含め誰もログインできなくなりました。至急助けてください。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "rule": {
+        "urgency": "high"
+      },
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 31,
+        "text": "請求書の発行機能で、自社のロゴを入れる方法はありますか？",
+        "department": "technical",
+        "urgency": "low",
+        "note": "請求書という語を含むが、機能の使い方の質問"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "billing"
+      },
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.62
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.65
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 32,
+        "text": "通知メールが1日に何十通も来てしまいます。まとめて受け取る設定はありますか？",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.45
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 33,
+        "text": "解約したいです。手続きの方法を教えてください。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "low"
+      },
+      "rule": {
+        "department": "account"
+      },
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.91
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 34,
+        "text": "来月からプランをスタンダードからプロに変更したいです。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.84
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 35,
+        "text": "退職した社員のアカウントを削除したいのですが、データは残せますか？",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.75
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 36,
+        "text": "会社の住所が変わったので、登録情報を変更したいです。",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.93
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 37,
+        "text": "管理者が退職してしまい、誰も管理者権限を持っていません。ユーザー追加ができず困っています。",
+        "department": "account",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.81
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 38,
+        "text": "契約の名義を親会社に移したいです。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.87
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 39,
+        "text": "無料プランに戻すことはできますか？",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.34
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 40,
+        "text": "社員の個人情報を削除してほしいという依頼がありました。対応方法を教えてください。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.78
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.57
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 41,
+        "text": "契約更新日が近いですが、自動更新を止めたいです。更新日は今週金曜です。",
+        "department": "account",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.69
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 42,
+        "text": "担当者が変わったので、連絡先メールアドレスを変更してください。",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.94
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 43,
+        "text": "部署ごとに閲覧権限を分けたいのですが、今のプランで可能ですか？",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.96
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.29
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 44,
+        "text": "一時的に利用を休止することはできますか？繁忙期が終わるまで使わない予定です。",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.28
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 45,
+        "text": "解約はしないのですが、使っていないオプションだけ外したいです。",
+        "department": "account",
+        "urgency": "low",
+        "note": "解約ルールに引っかかるが、実際はプラン変更"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "account"
+      },
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.7
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 46,
+        "text": "アカウントの統合はできますか？部署ごとに別々に契約してしまいました。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.86
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 47,
+        "text": "退会すると、これまでのデータはどうなりますか？",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "account"
+      },
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.28
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 48,
+        "text": "ユーザー数の上限に達して、新入社員を追加できません。明日が入社日です。",
+        "department": "account",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.99
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 49,
+        "text": "解約後に請求が来ています。先月末で解約したはずです。",
+        "department": "billing",
+        "urgency": "high",
+        "note": "解約の語があるが、問題は解約後の請求"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "account"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.9
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.33
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 50,
+        "text": "2段階認証を全社で必須にする設定を管理者として有効にしたいです。",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.87
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.8
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 51,
+        "text": "50名規模での導入を検討しています。見積もりをいただけますか。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "sales"
+      },
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.95
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 52,
+        "text": "オンラインでデモを見せていただくことは可能ですか？",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "sales"
+      },
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.34
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 53,
+        "text": "無料トライアルの期間を延長してもらえませんか？社内の稟議が間に合いません。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.31
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 54,
+        "text": "他社ツールからの乗り換えを考えています。データ移行のサポートはありますか？",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.67
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.37
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 55,
+        "text": "代理店として販売したいのですが、パートナー制度はありますか？",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.39
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 56,
+        "text": "オンプレミス版はありますか？セキュリティ要件で社外クラウドが使えません。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.84
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.9
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 57,
+        "text": "今期中に契約したいので、今週中に見積書を出していただけますか。",
+        "department": "sales",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "sales"
+      },
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.38
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 58,
+        "text": "導入事例の資料をいただけますか？製造業のものがあれば助かります。",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.61
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 59,
+        "text": "現在20ユーザーで利用中です。別の事業部でも追加で100ユーザー導入したいので相談させてください。",
+        "department": "sales",
+        "urgency": "normal",
+        "note": "既存顧客だが追加購入なので営業"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.43
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.89
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 60,
+        "text": "教育機関向けの割引はありますか？",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.89
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 61,
+        "text": "セキュリティチェックシートへの回答をお願いできますか？導入検討の条件になっています。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.89
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.88
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 62,
+        "text": "明日の役員会で導入可否を決めます。価格表だけでも今日中にいただけないでしょうか。",
+        "department": "sales",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.99
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 63,
+        "text": "デモ環境にログインできません。明日お客様に見せる予定です。",
+        "department": "technical",
+        "urgency": "high",
+        "note": "デモの語があるが、ログインの不具合"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "high"
+      },
+      "rule": {
+        "department": "sales"
+      },
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.76
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.98
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 64,
+        "text": "共同でイベントを開催しませんか？当社は業務効率化のメディアを運営しています。",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.76
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.73
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 65,
+        "text": "機能改善の要望です。タスクに色ラベルを付けられるようにしてほしいです。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "low"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.45
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.9
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 66,
+        "text": "いつも便利に使っています。サポートの方の対応がとても丁寧でした。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 67,
+        "text": "御社の取材をさせていただけないでしょうか。業界誌の記者です。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.62
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 68,
+        "text": "エンジニアの採用に応募したいのですが、窓口はこちらでよいですか？",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.26
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 69,
+        "text": "【重要】あなたのアカウントが停止されます。こちらのリンクから確認してください。",
+        "department": "other",
+        "urgency": "low",
+        "note": "フィッシング／スパム"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.59
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.88
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 70,
+        "text": "株主優待はありますか？",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.52
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.96
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 71,
+        "text": "テスト送信です。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.91
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.99
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 72,
+        "text": "UIがわかりにくいです。もっとシンプルにしてください。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.51
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.35
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 73,
+        "text": "御社のサービス名を騙った電話がかかってきました。注意喚起されたほうがよいと思います。",
+        "department": "other",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.81
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 74,
+        "text": "学生です。卒業研究でアンケートにご協力いただけませんか。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.29
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 75,
+        "text": "障害情報はどこで確認できますか？今つながらないのですが、うちだけでしょうか。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.44
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 76,
+        "text": "支払い済みなのに「未払い」と表示されて機能が制限されています。至急確認してください。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "rule": {
+        "urgency": "high"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.98
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 77,
+        "text": "プラン変更したら、日割りで請求されますか？",
+        "department": "billing",
+        "urgency": "low",
+        "note": "プラン変更だが質問は請求計算"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.64
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.48
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 78,
+        "text": "見積書の有効期限が切れてしまいました。同じ条件で再発行できますか？",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "sales"
+      },
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.88
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 79,
+        "text": "ログイン画面に「メンテナンス中」と出たままです。予定の終了時刻を2時間過ぎています。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.92
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 80,
+        "text": "データの保存場所は日本国内ですか？顧客に説明が必要です。",
+        "department": "sales",
+        "urgency": "normal",
+        "note": "既存か見込みか曖昧。導入説明用として営業"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.49
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.73
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 81,
+        "text": "監査ログを1年分エクスポートしたいです。監査法人から求められています。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.94
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.78
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 82,
+        "text": "契約書の控えをもう一度送ってもらえますか？",
+        "department": "account",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.75
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.73
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 83,
+        "text": "請求先の部署を経理部から総務部に変更したいです。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.75
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.88
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 84,
+        "text": "試用期間が終わると自動で有料になりますか？",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.71
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.37
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 85,
+        "text": "大至急！顧客情報が外部から見られる状態になっているかもしれません。共有リンクの設定を確認したいです。",
+        "department": "technical",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "high"
+      },
+      "rule": {
+        "urgency": "high"
+      },
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.86
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 86,
+        "text": "インボイス対応の請求書フォーマットで、税率ごとの内訳が出るようにできますか？当社の請求書発行に使っています。",
+        "department": "technical",
+        "urgency": "normal",
+        "note": "インボイスの語があるが、機能の設定の質問"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "billing"
+      },
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.39
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.67
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 87,
+        "text": "利用規約の改定内容について質問があります。",
+        "department": "other",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.46
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.82
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 88,
+        "text": "モバイルアプリでオフラインのまま作業することはできますか？",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.99
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.75
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 89,
+        "text": "年度末に向けてユーザーを一時的に倍に増やしたいのですが、期間限定の契約はありますか？",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.73
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.87
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 90,
+        "text": "返金の手続きはどのくらいで完了しますか？先週申請しました。",
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.88
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 91,
+        "text": "チームメンバーを招待するメールが相手に届いていないようです。",
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.44
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.72
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 92,
+        "text": "管理画面の言語を英語に切り替えられますか？海外拠点のメンバーが使います。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 0.96
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.52
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 93,
+        "text": "決算期の変更に伴い、請求の締め日を変えたいです。",
+        "department": "billing",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.91
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.93
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 94,
+        "text": "メールアドレスを間違えて登録してしまい、アカウントにアクセスできません。",
+        "department": "account",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "high"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "account",
+          "confidence": 0.48
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 0.41
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 95,
+        "text": "お問い合わせフォームから送った件、1週間返事がありません。",
+        "department": "other",
+        "urgency": "normal",
+        "note": "元の用件が不明なのでその他"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "other",
+          "confidence": 0.81
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.97
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 96,
+        "text": "来週から新しい部署でも使いたいので、ライセンスを10個追加購入したいです。",
+        "department": "sales",
+        "urgency": "normal"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.82
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.98
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 97,
+        "text": "支払いに使っている法人カードを不正利用されたので、至急カードを止めて別のカードに切り替えたいです。",
+        "department": "billing",
+        "urgency": "high"
+      },
+      "keyword": {
+        "department": "billing",
+        "urgency": "high"
+      },
+      "rule": {
+        "urgency": "high"
+      },
+      "jev": {
+        "department": {
+          "choice": "billing",
+          "confidence": 0.96
+        },
+        "urgency": {
+          "choice": "high",
+          "confidence": 1
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 98,
+        "text": "タスクの期限が前日になると通知が来る設定にしたいです。",
+        "department": "technical",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "technical",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "technical",
+          "confidence": 1
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.26
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 99,
+        "text": "御社のツールを使ったセミナーを社内でやりたいので、講師をお願いできますか？費用も知りたいです。",
+        "department": "sales",
+        "urgency": "low"
+      },
+      "keyword": {
+        "department": "other",
+        "urgency": "normal"
+      },
+      "rule": {},
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.97
+        },
+        "urgency": {
+          "choice": "normal",
+          "confidence": 0.76
+        }
+      }
+    },
+    {
+      "item": {
+        "id": 100,
+        "text": "急ぎではないのですが、デモで見た自動化機能は今のプランでも使えますか？",
+        "department": "sales",
+        "urgency": "low",
+        "note": "デモの語があり既存顧客にも読める"
+      },
+      "keyword": {
+        "department": "account",
+        "urgency": "normal"
+      },
+      "rule": {
+        "department": "sales"
+      },
+      "jev": {
+        "department": {
+          "choice": "sales",
+          "confidence": 0.35
+        },
+        "urgency": {
+          "choice": "low",
+          "confidence": 0.99
+        }
+      }
+    }
+  ]
+}

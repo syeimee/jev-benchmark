@@ -74,7 +74,7 @@ export function createGptPlayer({
               outputTokens: result.usage.outputTokens,
               reasoningTokens: result.usage.outputTokenDetails.reasoningTokens,
             },
-            providerMetadata: result.providerMetadata,
+            providerMetadata: result.finalStep.providerMetadata,
           };
         } catch (error) {
           // Output that fails the schema counts as an illegal answer, not a crash.
