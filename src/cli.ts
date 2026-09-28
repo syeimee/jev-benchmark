@@ -1,6 +1,7 @@
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { parseArgs } from 'node:util';
+import { captureRun } from './capture.js';
 import { type GameRecord, playGame } from './match.js';
 import type { Color } from './othello.js';
 import { createGptPlayer } from './players/gpt.js';
@@ -22,6 +23,7 @@ const USAGE = `Usage: npm run bench -- [options]
   --gpt-model <id>           Gateway language model (default: openai/gpt-5-mini).
   --seed <n>                 RNG seed for sampling / random player (default: current time).
   --out <path>               JSONL output (default: results/<timestamp>.jsonl).
+  --capture                  After each game, save one PNG per turn to captures/<run name>/.
   --verbose                  Print every turn.`;
 
 type PlayerKind = 'jev' | 'gpt' | 'random';
@@ -49,6 +51,7 @@ const { values } = parseArgs({
     'gpt-model': { type: 'string', default: 'openai/gpt-5-mini' },
     seed: { type: 'string' },
     out: { type: 'string' },
+    capture: { type: 'boolean', default: false },
     verbose: { type: 'boolean', default: false },
     help: { type: 'boolean', default: false },
   },
@@ -133,6 +136,15 @@ for (let game = 1; game <= games; game++) {
   const { turns: _turns, ...summary } = result;
   emit({ type: 'game_end', game, p1Color, ...summary });
   console.log(`  -> ${result.winner} (${result.reason}) ${result.score.black}-${result.score.white}\n`);
+  if (values.capture) {
+    // Screenshot failures shouldn't abort a paid benchmark run.
+    try {
+      const shots = await captureRun({ file: out, games: [game] });
+      console.log(`  captured ${shots.length} turn(s)\n`);
+    } catch (error) {
+      console.error(`  capture failed: ${error instanceof Error ? error.message : String(error)}\n`);
+    }
+  }
 
   for (const [slot, color] of [['p1', p1Color], ['p2', p2Color]] as const) {
     const t = tally[slot];

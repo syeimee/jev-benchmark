@@ -65,6 +65,7 @@ header {
   position: sticky; top: 0; z-index: 5;
 }
 header h1 { font-size: 16px; margin: 0 8px 0 0; }
+header[hidden] { display: none; }
 select, button {
   font: inherit; color: inherit; background: var(--surface-2);
   border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px;
@@ -208,7 +209,7 @@ const coordIdx = (c) => (Number(c[1]) - 1) * 8 + COLS.indexOf(c[0]);
 const count = (b, ch) => [...b].filter((x) => x === ch).length;
 
 // ---------- state ----------
-const ui = { runName: null, run: null, game: null, turn: null, view: 'before', rawText: '' };
+const ui = { runName: null, run: null, game: null, turn: null, view: 'before', rawText: '', capture: false };
 const tooltip = document.getElementById('tooltip');
 function showTip(e, lines) {
   tooltip.replaceChildren(...lines.map((l) => h('div', null, l)));
@@ -287,13 +288,18 @@ function playerStats(run) {
 // The URL hash mirrors the selected run/game/turn so a specific move can be reopened or shared.
 function readHash() {
   const p = new URLSearchParams(location.hash.slice(1));
-  return { run: p.get('run'), game: p.has('game') ? Number(p.get('game')) : null, turn: p.has('turn') ? Number(p.get('turn')) - 1 : null };
+  return {
+    run: p.get('run'), game: p.has('game') ? Number(p.get('game')) : null, turn: p.has('turn') ? Number(p.get('turn')) - 1 : null,
+    capture: p.get('capture') === '1', view: p.get('view') === 'after' ? 'after' : 'before',
+  };
 }
 function writeHash() {
   const p = new URLSearchParams();
   if (ui.runName) p.set('run', ui.runName);
   if (ui.game != null) p.set('game', ui.game);
   if (ui.turn != null) p.set('turn', ui.turn + 1);
+  if (ui.view === 'after') p.set('view', 'after');
+  if (ui.capture) p.set('capture', '1');
   history.replaceState(null, '', '#' + p);
 }
 
@@ -304,7 +310,9 @@ function renderAll() {
     main.replaceChildren(h('div', { class: 'empty' }, 'このログにはまだ run イベントがありません。'));
     return;
   }
-  main.replaceChildren(renderSummary(run), renderGames(run), renderGame(run));
+  // Capture mode (used by `npm run capture`) shows only the game panel.
+  if (ui.capture) main.replaceChildren(renderGame(run));
+  else main.replaceChildren(renderSummary(run), renderGames(run), renderGame(run));
   writeHash();
 }
 
@@ -598,6 +606,11 @@ async function loadRuns() {
   sel.replaceChildren(...runs.map((r) => h('option', { value: r.name }, `${r.name}  (${new Date(r.mtime).toLocaleString()})`)));
   if (!runs.length) return;
   const initial = ui.runName == null ? readHash() : null;
+  if (initial) {
+    ui.capture = initial.capture;
+    ui.view = initial.view;
+    document.querySelector('header').hidden = ui.capture;
+  }
   const wanted = initial?.run ?? prev;
   const keep = runs.some((r) => r.name === wanted) ? wanted : runs[0].name;
   sel.value = keep;
@@ -640,6 +653,8 @@ document.addEventListener('keydown', (e) => {
 
 loadRuns();
 setInterval(async () => {
+  // A capture page must go idle so headless Chrome can take the screenshot.
+  if (ui.capture) return;
   await loadRuns();
   if (ui.run && !ui.run.ended) await loadRun();
 }, 2000);

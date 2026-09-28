@@ -5,6 +5,7 @@
   "scripts": {
     "bench": "node --env-file-if-exists=.env --import tsx src/cli.ts",
     "viewer": "tsx src/viewer/server.ts",
+    "capture": "tsx src/capture-cli.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
