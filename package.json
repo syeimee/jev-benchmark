@@ -1,0 +1,21 @@
+{
+  "name": "jev-testing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bench": "node --env-file-if-exists=.env --import tsx src/cli.ts",
+    "viewer": "tsx src/viewer/server.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ai": "^7.0.118",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  }
+}

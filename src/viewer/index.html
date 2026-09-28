@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Othello Bench Viewer</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f6f4;
+  --surface: #fcfcfb;
+  --surface-2: #f0efec;
+  --border: #e2e1dc;
+  --text: #0b0b0b;
+  --text-2: #52514e;
+  --text-3: #7a7974;
+  --accent: #2a78d6;
+  --accent-soft: #cde2fb;
+  --grid: #e8e7e3;
+  --board: #2f7d4f;
+  --board-line: #245f3c;
+  --good: #0ca30c;
+  --good-text: #006300;
+  --critical: #d03b3b;
+  --warning-bg: #fdf1d6;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121211;
+    --surface: #1a1a19;
+    --surface-2: #242422;
+    --border: #33332f;
+    --text: #ffffff;
+    --text-2: #c3c2b7;
+    --text-3: #8f8e86;
+    --accent: #3987e5;
+    --accent-soft: #184f95;
+    --grid: #2a2a27;
+    --board: #25603d;
+    --board-line: #1b4a2e;
+    --good: #0ca30c;
+    --good-text: #4cc94c;
+    --critical: #e66767;
+    --warning-bg: #3a3017;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --surface-2: #242422; --border: #33332f;
+  --text: #ffffff; --text-2: #c3c2b7; --text-3: #8f8e86;
+  --accent: #3987e5; --accent-soft: #184f95; --grid: #2a2a27;
+  --board: #25603d; --board-line: #1b4a2e;
+  --good: #0ca30c; --good-text: #4cc94c; --critical: #e66767; --warning-bg: #3a3017;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.5 system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+header {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface);
+  position: sticky; top: 0; z-index: 5;
+}
+header h1 { font-size: 16px; margin: 0 8px 0 0; }
+select, button {
+  font: inherit; color: inherit; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px;
+}
+button { cursor: pointer; }
+button:disabled { opacity: .4; cursor: default; }
+select { max-width: 100%; }
+.live { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-3); }
+.live.on .dot { background: var(--good); }
+main { padding: 16px; display: grid; gap: 16px; max-width: 1400px; margin: 0 auto; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; min-width: 0; }
+.card h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-2); margin: 0 0 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.chip { font-size: 12px; background: var(--surface-2); border-radius: 999px; padding: 2px 10px; color: var(--text-2); }
+.chip b { color: var(--text); font-weight: 600; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+th { font-size: 12px; font-weight: 500; color: var(--text-3); }
+td.num, th.num { text-align: right; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover { background: var(--surface-2); }
+tr.selected { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--accent); }
+.badge { display: inline-block; font-size: 11px; border-radius: 4px; padding: 0 6px; border: 1px solid var(--border); color: var(--text-2); }
+.badge.bad { border-color: var(--critical); color: var(--critical); }
+.badge.ok { border-color: var(--good); color: var(--good-text); }
+.disc { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: -1px; border: 1px solid #555; }
+.disc.black { background: #111; border-color: #777; }
+.disc.white { background: #fafafa; }
+.game-layout { display: grid; grid-template-columns: minmax(280px, 400px) 1fr; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .game-layout { grid-template-columns: 1fr; } }
+.board-wrap { display: grid; grid-template-columns: 16px 1fr; grid-template-rows: 16px auto; gap: 2px; font-size: 11px; color: var(--text-3); }
+.cols { display: grid; grid-template-columns: repeat(8, 1fr); text-align: center; grid-column: 2; }
+.rows { display: grid; grid-template-rows: repeat(8, 1fr); align-items: center; text-align: center; }
+.board {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;
+  background: var(--board-line); padding: 2px; border-radius: 6px; aspect-ratio: 1;
+}
+.sq { background: var(--board); position: relative; display: grid; place-items: center; aspect-ratio: 1; }
+.sq .stone { width: 80%; height: 80%; border-radius: 50%; }
+.sq .stone.black { background: radial-gradient(circle at 35% 35%, #555, #000 70%); }
+.sq .stone.white { background: radial-gradient(circle at 35% 35%, #fff, #d8d8d8 70%); }
+.sq .stone.flipped { outline: 2px dashed rgba(255,255,255,.55); outline-offset: 1px; }
+.sq.chosen { box-shadow: inset 0 0 0 3px #ffd84d; }
+.sq.tried { box-shadow: inset 0 0 0 3px var(--critical); }
+.sq .legal { width: 22%; height: 22%; border-radius: 50%; background: rgba(255,255,255,.35); }
+.sq .pct {
+  position: absolute; inset: auto 0 2px; text-align: center; font-size: 10px; font-weight: 600;
+  color: #fff; text-shadow: 0 1px 2px #000; font-variant-numeric: tabular-nums;
+}
+.sq .heat { position: absolute; inset: 0; background: #ffd84d; pointer-events: none; }
+.controls { display: flex; gap: 6px; align-items: center; margin: 12px 0 4px; flex-wrap: wrap; }
+.controls input[type=range] { flex: 1; min-width: 120px; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; background: transparent; }
+.seg button.on { background: var(--accent); color: #fff; }
+.turn-label { font-size: 13px; color: var(--text-2); margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { fill: var(--text-3); font-size: 10px; }
+.tooltip {
+  position: fixed; pointer-events: none; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 8px; font-size: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  display: none; z-index: 20; font-variant-numeric: tabular-nums;
+}
+.turns { max-height: 260px; overflow-y: auto; margin-top: 12px; border-top: 1px solid var(--border); }
+.turns table td { padding: 3px 8px; font-size: 12px; }
+.detail h3 { font-size: 15px; margin: 0 0 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.meta { color: var(--text-3); font-size: 12px; margin-bottom: 12px; font-variant-numeric: tabular-nums; }
+.note { background: var(--surface-2); border-radius: 6px; padding: 10px 12px; color: var(--text-2); }
+.warn { background: var(--warning-bg); border-radius: 6px; padding: 10px 12px; }
+pre {
+  font: 12px/1.45 var(--mono); background: var(--surface-2); border-radius: 6px; padding: 10px;
+  margin: 6px 0 0; white-space: pre-wrap; word-break: break-word; max-height: 420px; overflow: auto;
+}
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--text-2); font-size: 13px; }
+.probs { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; align-items: center; font-variant-numeric: tabular-nums; }
+.probs .k { font-family: var(--mono); font-size: 12px; }
+.probs .k.chosen { font-weight: 700; }
+.bar-track { height: 14px; position: relative; }
+.bar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 0 4px 4px 0; min-width: 1px; }
+.bar.dim { background: var(--accent-soft); }
+.probs .v { font-size: 12px; color: var(--text-2); text-align: right; }
+.criteria-desc { font-size: 12px; color: var(--text-2); grid-column: 1 / -1; margin: -2px 0 6px; }
+.attempt { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-top: 10px; }
+.attempt .head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.attempt .reason { margin: 6px 0 0; }
+.retry { font-size: 12px; color: var(--text-3); margin: 8px 0 0 12px; border-left: 2px solid var(--border); padding-left: 8px; white-space: pre-wrap; }
+.empty { color: var(--text-3); padding: 24px; text-align: center; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.kpi { border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+.kpi .name { font-size: 12px; color: var(--text-2); font-family: var(--mono); word-break: break-all; }
+.kpi .big { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.kpi .sub { font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Othello Bench Viewer</h1>
+  <select id="runSelect" aria-label="実行ログ"></select>
+  <span class="live" id="live"><span class="dot"></span><span id="liveText">-</span></span>
+  <label class="live"><input type="checkbox" id="follow" checked> 最新の手を追う</label>
+</header>
+<main id="main"><div class="empty">results/ に実行ログがありません。<code>npm run bench</code> を実行してください。</div></main>
+<div class="tooltip" id="tooltip"></div>
+<script>
+'use strict';
+// ---------- DOM helpers (all model output goes through textContent) ----------
+function h(tag, attrs, ...children) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'style') el.style.cssText = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of children.flat(Infinity)) {
+    if (c == null || c === false) continue;
+    el.append(c instanceof Node ? c : String(c));
+  }
+  return el;
+}
+const svgNS = 'http://www.w3.org/2000/svg';
+function s(tag, attrs, ...children) {
+  const el = document.createElementNS(svgNS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) if (v != null) el.setAttribute(k, v);
+  for (const c of children.flat(Infinity)) if (c != null && c !== false) el.append(c instanceof Node ? c : String(c));
+  return el;
+}
+const fmt = {
+  pct: (p) => (p * 100 >= 10 ? (p * 100).toFixed(0) : (p * 100).toFixed(1)) + '%',
+  ms: (ms) => (ms == null ? '-' : ms >= 1000 ? (ms / 1000).toFixed(1) + 's' : ms + 'ms'),
+  num: (n) => (n == null ? '-' : n.toLocaleString()),
+  signed: (n) => (n > 0 ? '+' : '') + n,
+};
+const COLS = 'abcdefgh';
+const INITIAL = '.'.repeat(27) + 'OX' + '.'.repeat(6) + 'XO' + '.'.repeat(27);
+const coordIdx = (c) => (Number(c[1]) - 1) * 8 + COLS.indexOf(c[0]);
+const count = (b, ch) => [...b].filter((x) => x === ch).length;
+
+// ---------- state ----------
+const ui = { runName: null, run: null, game: null, turn: null, view: 'before', rawText: '' };
+const tooltip = document.getElementById('tooltip');
+function showTip(e, lines) {
+  tooltip.replaceChildren(...lines.map((l) => h('div', null, l)));
+  tooltip.style.display = 'block';
+  const x = Math.min(e.clientX + 12, window.innerWidth - tooltip.offsetWidth - 8);
+  tooltip.style.left = x + 'px';
+  tooltip.style.top = e.clientY + 12 + 'px';
+}
+const hideTip = () => (tooltip.style.display = 'none');
+
+// ---------- parsing ----------
+function parseRun(text) {
+  const run = { config: null, startedAt: null, ended: false, games: [] };
+  const byNum = new Map();
+  const game = (n) => {
+    if (!byNum.has(n)) {
+      const g = { game: n, turns: [], end: null, error: null };
+      byNum.set(n, g);
+      run.games.push(g);
+    }
+    return byNum.get(n);
+  };
+  for (const line of text.split('\n')) {
+    if (!line.trim()) continue;
+    let ev;
+    try { ev = JSON.parse(line); } catch { continue; } // tolerate a half-written last line
+    if (ev.type === 'run') { run.config = ev.config; run.startedAt = ev.startedAt; }
+    else if (ev.type === 'game_start') Object.assign(game(ev.game), { black: ev.black, white: ev.white, p1Color: ev.p1Color });
+    else if (ev.type === 'turn') game(ev.game).turns.push(ev.turn);
+    else if (ev.type === 'game_end') game(ev.game).end = ev;
+    else if (ev.type === 'game_error') game(ev.game).error = ev.error;
+    else if (ev.type === 'run_end') run.ended = true;
+  }
+  return run;
+}
+
+function apiCalls(turn) {
+  const d = turn.detail;
+  if (!d) return 0;
+  return d.player === 'gpt' ? d.attempts.length : 1;
+}
+
+function playerStats(run) {
+  const names = [run.config.p1, run.config.p2];
+  const stats = names.map((name, i) => ({
+    slot: 'P' + (i + 1), name, w: 0, l: 0, d: 0, illegal: 0, diff: 0, played: 0,
+    calls: 0, latency: 0, inTok: 0, outTok: 0, retries: 0,
+  }));
+  for (const g of run.games) {
+    if (!g.p1Color) continue;
+    const colorOf = [g.p1Color, g.p1Color === 'black' ? 'white' : 'black'];
+    for (const t of g.turns) {
+      const st = stats[colorOf.indexOf(t.color)];
+      if (!st || !t.detail) continue;
+      st.calls += apiCalls(t);
+      st.latency += t.detail.latencyMs || 0;
+      st.inTok += t.detail.usage?.inputTokens || 0;
+      st.outTok += t.detail.usage?.outputTokens || 0;
+      if (t.detail.player === 'gpt') st.retries += t.detail.attempts.length - 1;
+    }
+    if (!g.end) continue;
+    colorOf.forEach((c, i) => {
+      const st = stats[i];
+      const other = c === 'black' ? 'white' : 'black';
+      st.played++;
+      if (g.end.winner === 'draw') st.d++;
+      else if (g.end.winner === c) st.w++;
+      else { st.l++; if (g.end.reason === 'illegal_move') st.illegal++; }
+      st.diff += g.end.score[c] - g.end.score[other];
+    });
+  }
+  return stats;
+}
+
+// ---------- rendering ----------
+// The URL hash mirrors the selected run/game/turn so a specific move can be reopened or shared.
+function readHash() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  return { run: p.get('run'), game: p.has('game') ? Number(p.get('game')) : null, turn: p.has('turn') ? Number(p.get('turn')) - 1 : null };
+}
+function writeHash() {
+  const p = new URLSearchParams();
+  if (ui.runName) p.set('run', ui.runName);
+  if (ui.game != null) p.set('game', ui.game);
+  if (ui.turn != null) p.set('turn', ui.turn + 1);
+  history.replaceState(null, '', '#' + p);
+}
+
+function renderAll() {
+  const main = document.getElementById('main');
+  const run = ui.run;
+  if (!run || !run.config) {
+    main.replaceChildren(h('div', { class: 'empty' }, 'このログにはまだ run イベントがありません。'));
+    return;
+  }
+  main.replaceChildren(renderSummary(run), renderGames(run), renderGame(run));
+  writeHash();
+}
+
+function renderSummary(run) {
+  const c = run.config;
+  const chips = [
+    ['games', c.games], ['hints', c.hints ? 'on' : 'off'], ['policy', c.policy],
+    ['annotate-moves', c.annotateMoves ? 'on' : 'off'], ['swap', c.swap ? 'on' : 'off'], ['seed', c.seed],
+    ['開始', run.startedAt ? new Date(run.startedAt).toLocaleString() : '-'],
+  ].map(([k, v]) => h('span', { class: 'chip' }, k + ' ', h('b', null, v)));
+  const stats = playerStats(run);
+  const kpis = stats.map((st) => h('div', { class: 'kpi' },
+    h('div', { class: 'name' }, st.slot + ' · ' + st.name),
+    h('div', { class: 'big' }, `${st.w}勝 ${st.l}敗 ${st.d}分`),
+    h('div', { class: 'sub' },
+      `勝率 ${st.played ? fmt.pct(st.w / st.played) : '-'} · 平均石差 ${st.played ? fmt.signed(+(st.diff / st.played).toFixed(1)) : '-'} · 反則負け ${st.illegal}`),
+    h('div', { class: 'sub' },
+      `API呼び出し ${st.calls} 回 · 平均 ${st.calls ? fmt.ms(Math.round(st.latency / st.calls)) : '-'} · tokens in ${fmt.num(st.inTok)} / out ${fmt.num(st.outTok)}` +
+      (st.retries ? ` · 再試行 ${st.retries}` : '')),
+  ));
+  const done = run.games.filter((g) => g.end).length;
+  return h('section', { class: 'card' },
+    h('h2', null, `ベンチマーク結果（${done}/${c.games} 局 完了）`),
+    h('div', { class: 'chips' }, chips),
+    h('div', { class: 'kpis' }, kpis),
+  );
+}
+
+function renderGames(run) {
+  const rows = run.games.map((g) => {
+    const e = g.end;
+    const status = g.error ? h('span', { class: 'badge bad' }, 'API エラー')
+      : !e ? h('span', { class: 'badge' }, `進行中 ${g.turns.length} 手`)
+      : e.reason === 'illegal_move' ? h('span', { class: 'badge bad' }, '反則負けあり') : h('span', { class: 'badge ok' }, '終局');
+    const winner = !e ? '-' : e.winner === 'draw' ? '引き分け' : [h('span', { class: 'disc ' + e.winner }), ' ', e.winner === 'black' ? g.black : g.white];
+    return h('tr', {
+      class: 'clickable' + (ui.game === g.game ? ' selected' : ''),
+      onclick: () => { ui.game = g.game; ui.turn = null; setFollow(g === run.games.at(-1)); renderAll(); },
+    },
+      h('td', { class: 'num' }, g.game),
+      h('td', null, h('span', { class: 'disc black' }), ' ', g.black || '-'),
+      h('td', null, h('span', { class: 'disc white' }), ' ', g.white || '-'),
+      h('td', { class: 'num' }, e ? `${e.score.black} - ${e.score.white}` : `${count(g.turns.at(-1)?.board || INITIAL, 'X')} - ${count(g.turns.at(-1)?.board || INITIAL, 'O')}`),
+      h('td', null, winner),
+      h('td', null, status),
+      h('td', { class: 'num' }, e ? fmt.ms(e.durationMs) : '-'),
+    );
+  });
+  return h('section', { class: 'card' },
+    h('h2', null, '対局一覧'),
+    h('div', { class: 'table-wrap' }, h('table', null,
+      h('thead', null, h('tr', null, ['#', '黒', '白', '石数', '勝者', '状態', '時間'].map((t, i) => h('th', { class: i === 0 || i >= 3 && i !== 4 && i !== 5 ? 'num' : null }, t)))),
+      h('tbody', null, rows),
+    )),
+  );
+}
+
+// "Follow" keeps the view on the newest turn of the newest game while a run is live.
+function setFollow(on) { document.getElementById('follow').checked = on; }
+
+function currentGame(run) {
+  return run.games.find((g) => g.game === ui.game) || run.games.at(-1);
+}
+
+function renderGame(run) {
+  const g = currentGame(run);
+  if (!g || g.turns.length === 0) return h('section', { class: 'card' }, h('div', { class: 'empty' }, '対局データを待っています…'));
+  ui.game = g.game;
+  const n = g.turns.length;
+  if (ui.turn == null || ui.turn >= n) ui.turn = n - 1;
+  const t = g.turns[ui.turn];
+  const before = ui.turn === 0 ? INITIAL : g.turns[ui.turn - 1].board;
+
+  const go = (i) => { ui.turn = Math.max(0, Math.min(n - 1, i)); setFollow(ui.turn === n - 1 && g === run.games.at(-1)); renderAll(); };
+  const slider = h('input', { type: 'range', min: 0, max: n - 1, value: ui.turn, 'aria-label': '手の位置', oninput: (e) => go(Number(e.target.value)) });
+  const seg = h('div', { class: 'seg' },
+    ['before', 'after'].map((v) => h('button', { class: ui.view === v ? 'on' : null, onclick: () => { ui.view = v; renderAll(); } }, v === 'before' ? '着手前' : '着手後')));
+
+  const left = h('div', null,
+    renderBoard(ui.view === 'before' ? before : t.board, t, before),
+    h('div', { class: 'controls' },
+      h('button', { onclick: () => go(0), 'aria-label': '最初' }, '⏮'),
+      h('button', { onclick: () => go(ui.turn - 1), disabled: ui.turn === 0, 'aria-label': '前' }, '◀'),
+      slider,
+      h('button', { onclick: () => go(ui.turn + 1), disabled: ui.turn === n - 1, 'aria-label': '次' }, '▶'),
+      h('button', { onclick: () => go(n - 1), 'aria-label': '最後' }, '⏭'),
+      seg,
+    ),
+    h('div', { class: 'turn-label' }, `ターン ${ui.turn + 1} / ${n}（← → キーでも移動）  黒 ${count(t.board, 'X')} · 白 ${count(t.board, 'O')}`),
+    renderDiffChart(g, go),
+    renderTurnList(g, go),
+  );
+  return h('section', { class: 'card' },
+    h('h2', null, `対局 #${g.game}`),
+    h('div', { class: 'game-layout' }, left, renderDetail(g, t, before)),
+  );
+}
+
+function probsOf(t) {
+  return t.detail?.player === 'jev' ? t.detail.response?.answers?.move?.probabilities : null;
+}
+
+function renderBoard(board, t, before) {
+  const legal = new Set(t.legalMoves || []);
+  const probs = ui.view === 'before' ? probsOf(t) : null;
+  const tried = new Set();
+  if (t.detail?.player === 'gpt') for (const a of t.detail.attempts) if (!a.legal && a.parsed) tried.add(a.parsed.move.trim().toLowerCase());
+  if (t.type === 'illegal') t.attempts.forEach((m) => tried.add(String(m).trim().toLowerCase()));
+  const chosen = t.type === 'move' ? t.move : null;
+  const sqs = [];
+  for (let i = 0; i < 64; i++) {
+    const coord = COLS[i % 8] + (Math.floor(i / 8) + 1);
+    const cell = board[i];
+    const cls = ['sq'];
+    if (chosen === coord) cls.push('chosen');
+    else if (tried.has(coord)) cls.push('tried');
+    const kids = [];
+    if (probs && probs[coord] != null) kids.push(h('div', { class: 'heat', style: `opacity:${(probs[coord] * 0.75).toFixed(3)}` }));
+    if (cell === 'X' || cell === 'O') {
+      const flipped = ui.view === 'after' && before[i] !== '.' && before[i] !== cell;
+      kids.push(h('div', { class: 'stone ' + (cell === 'X' ? 'black' : 'white') + (flipped ? ' flipped' : '') }));
+    } else if (ui.view === 'before' && legal.has(coord)) {
+      kids.push(h('div', { class: 'legal' }));
+    }
+    if (probs && probs[coord] != null) kids.push(h('div', { class: 'pct' }, fmt.pct(probs[coord])));
+    const tip = [coord];
+    if (probs && probs[coord] != null) tip.push(`Jev 確率 ${fmt.pct(probs[coord])}`);
+    if (chosen === coord) tip.push('選ばれた手');
+    if (tried.has(coord)) tip.push('非合法として却下された回答');
+    sqs.push(h('div', {
+      class: cls.join(' '),
+      onmousemove: (e) => showTip(e, tip), onmouseleave: hideTip,
+    }, kids));
+  }
+  return h('div', { class: 'board-wrap' },
+    h('div', { class: 'cols' }, [...COLS].map((c) => h('span', null, c))),
+    h('div', { class: 'rows' }, [1, 2, 3, 4, 5, 6, 7, 8].map((r) => h('span', null, r))),
+    h('div', { class: 'board', role: 'img', 'aria-label': '盤面' }, sqs),
+  );
+}
+
+// Disc difference (black − white) after each turn: one series, zero baseline.
+function renderDiffChart(g, go) {
+  const W = 360, H = 120, pl = 28, pr = 8, pt = 8, pb = 18;
+  const pts = g.turns.map((t, i) => ({ i, d: count(t.board, 'X') - count(t.board, 'O') }));
+  const max = Math.max(8, ...pts.map((p) => Math.abs(p.d)));
+  const x = (i) => pl + (pts.length <= 1 ? 0 : (i / (pts.length - 1)) * (W - pl - pr));
+  const y = (d) => pt + ((max - d) / (2 * max)) * (H - pt - pb);
+  const path = pts.map((p, k) => (k ? 'L' : 'M') + x(p.i).toFixed(1) + ',' + y(p.d).toFixed(1)).join('');
+  const cur = pts[ui.turn];
+  const svg = s('svg', { class: 'chart', viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '石差の推移（黒 − 白）' },
+    [max, 0, -max].map((v) => [
+      s('line', { x1: pl, x2: W - pr, y1: y(v), y2: y(v), stroke: v === 0 ? 'var(--text-3)' : 'var(--grid)', 'stroke-width': 1 }),
+      s('text', { x: pl - 4, y: y(v) + 3, 'text-anchor': 'end' }, fmt.signed(v)),
+    ]),
+    s('text', { x: pl, y: H - 4 }, '1'),
+    s('text', { x: W - pr, y: H - 4, 'text-anchor': 'end' }, String(pts.length)),
+    s('path', { d: path, fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2, 'stroke-linejoin': 'round' }),
+    cur && s('line', { x1: x(cur.i), x2: x(cur.i), y1: pt, y2: H - pb, stroke: 'var(--text-3)', 'stroke-dasharray': '2 3' }),
+    cur && s('circle', { cx: x(cur.i), cy: y(cur.d), r: 4, fill: 'var(--accent)', stroke: 'var(--surface)', 'stroke-width': 2 }),
+  );
+  const hit = s('rect', { x: pl, y: pt, width: W - pl - pr, height: H - pt - pb, fill: 'transparent', style: 'cursor:pointer' });
+  const nearest = (e) => {
+    const r = svg.getBoundingClientRect();
+    const px = ((e.clientX - r.left) / r.width) * W;
+    return Math.max(0, Math.min(pts.length - 1, Math.round(((px - pl) / (W - pl - pr)) * (pts.length - 1))));
+  };
+  hit.addEventListener('mousemove', (e) => {
+    const k = nearest(e);
+    const t = g.turns[k];
+    showTip(e, [`ターン ${k + 1}: ${t.color === 'black' ? '黒' : '白'} ${t.type === 'pass' ? 'パス' : t.move || '反則'}`, `石差 ${fmt.signed(pts[k].d)}`]);
+  });
+  hit.addEventListener('mouseleave', hideTip);
+  hit.addEventListener('click', (e) => go(nearest(e)));
+  svg.append(hit);
+  return h('div', null, h('div', { class: 'meta', style: 'margin:8px 0 0' }, '石差の推移（黒 − 白、クリックでその手へ移動）'), svg);
+}
+
+function turnLabel(t) {
+  if (t.type === 'pass') return 'パス';
+  if (t.type === 'illegal') return '反則: ' + t.attempts.join(' / ');
+  return t.move;
+}
+
+function renderTurnList(g, go) {
+  const rows = g.turns.map((t, i) => {
+    const badges = [];
+    if (t.type === 'move' && t.forced) badges.push(h('span', { class: 'badge' }, '唯一手'));
+    if (t.type === 'illegal') badges.push(h('span', { class: 'badge bad' }, '反則'));
+    if (t.detail?.player === 'gpt' && t.detail.attempts.length > 1) badges.push(h('span', { class: 'badge bad' }, `再試行 ${t.detail.attempts.length - 1}`));
+    if (t.detail?.player === 'jev' && t.detail.sampled) badges.push(h('span', { class: 'badge' }, 'sample'));
+    return h('tr', { class: 'clickable' + (i === ui.turn ? ' selected' : ''), onclick: () => go(i) },
+      h('td', { class: 'num' }, t.number ?? ''),
+      h('td', null, h('span', { class: 'disc ' + t.color })),
+      h('td', null, h('code', null, turnLabel(t)), ' ', badges),
+      h('td', { class: 'num' }, t.detail ? fmt.ms(t.detail.latencyMs) : ''),
+    );
+  });
+  const box = h('div', { class: 'turns' }, h('table', null, h('tbody', null, rows)));
+  // Scroll only the list itself; scrollIntoView would also move the page.
+  requestAnimationFrame(() => {
+    const row = box.querySelector('tr.selected');
+    if (row) box.scrollTop = row.offsetTop - box.clientHeight / 2;
+  });
+  return box;
+}
+
+function playerName(g, color) { return color === 'black' ? g.black : g.white; }
+
+function renderDetail(g, t, before) {
+  const who = `${t.color === 'black' ? '黒' : '白'}（${playerName(g, t.color)}）`;
+  const head = h('h3', null, h('span', { class: 'disc ' + t.color }),
+    t.type === 'pass' ? `${who} パス` : `${t.number}手目 ${who} → ${turnLabel(t)}`);
+  const d = t.detail;
+  const meta = [];
+  if (t.legalMoves?.length) meta.push(`合法手 ${t.legalMoves.length}: ${t.legalMoves.join(', ')}`);
+  if (d) meta.push(`レイテンシ ${fmt.ms(d.latencyMs)}`, `tokens in ${fmt.num(d.usage?.inputTokens)} / out ${fmt.num(d.usage?.outputTokens)}`);
+  const parts = [head, h('div', { class: 'meta' }, meta.join(' · '))];
+
+  if (t.type === 'pass') parts.push(h('div', { class: 'note' }, '合法手がないためパスしました。API は呼んでいません。'));
+  else if (t.type === 'move' && t.forced) parts.push(h('div', { class: 'note' }, '合法手が 1 つだけなので自動で着手しました。API は呼んでいません。'));
+  else if (!d) parts.push(h('div', { class: 'note' }, 'このプレイヤーはリクエスト/レスポンスを記録していません（random など）。'));
+  else if (d.player === 'jev') parts.push(...renderJev(t, d));
+  else if (d.player === 'gpt') parts.push(...renderGpt(t, d));
+  if (d) parts.push(h('details', null, h('summary', null, 'ターンの生データ（JSON）'), h('pre', null, JSON.stringify(t, null, 2))));
+  return h('div', { class: 'detail' }, parts);
+}
+
+function renderJev(t, d) {
+  const ans = d.response?.answers?.move || {};
+  const probs = ans.probabilities;
+  const criteria = d.request?.questions?.move?.criteria || {};
+  const keys = Object.keys(criteria);
+  const out = [];
+  const conf = d.response?.providerMetadata?.typesafe?.confidence?.move;
+  out.push(h('div', { class: 'meta' },
+    `Jev の回答 choice = ${ans.choice}` + (d.sampled ? `（sample で ${t.move} を選択）` : '') +
+    (conf != null ? ` · confidence ${typeof conf === 'number' ? conf.toFixed(3) : JSON.stringify(conf)}` : '')));
+  if (!probs) out.push(h('div', { class: 'warn' }, 'probabilities が返ってきていません（choice のみ）。'));
+  const maxP = probs ? Math.max(...Object.values(probs)) : 1;
+  const grid = h('div', { class: 'probs' });
+  for (const k of keys) {
+    const p = probs ? probs[k] ?? 0 : k === ans.choice ? 1 : 0;
+    const isChosen = k === t.move;
+    grid.append(
+      h('span', { class: 'k' + (isChosen ? ' chosen' : '') }, k),
+      h('div', { class: 'bar-track', onmousemove: (e) => showTip(e, [k, probs ? `確率 ${fmt.pct(p)}` : '確率なし', criteria[k]]), onmouseleave: hideTip },
+        h('div', { class: 'bar' + (isChosen ? '' : ' dim'), style: `width:${((p / (maxP || 1)) * 100).toFixed(1)}%` })),
+      h('span', { class: 'v' }, probs ? fmt.pct(p) : isChosen ? '選択' : ''),
+      h('div', { class: 'criteria-desc' }, criteria[k]),
+    );
+  }
+  out.push(grid);
+  out.push(
+    h('details', null, h('summary', null, 'リクエスト: state（盤面テキスト）'), h('pre', null, d.request.state)),
+    h('details', null, h('summary', null, 'リクエスト: instructions'), h('pre', null, d.request.questions.move.instructions)),
+    h('details', null, h('summary', null, 'レスポンス（answers / providerMetadata / warnings）'), h('pre', null, JSON.stringify(d.response, null, 2))),
+  );
+  return out;
+}
+
+function renderGpt(t, d) {
+  const out = [];
+  d.attempts.forEach((a, i) => {
+    const retry = d.request.messages[2 * i + 2];
+    out.push(h('div', { class: 'attempt' },
+      h('div', { class: 'head' },
+        h('b', null, `試行 ${i + 1}`),
+        a.legal ? h('span', { class: 'badge ok' }, '合法') : h('span', { class: 'badge bad' }, a.parseError ? 'JSON 解析失敗' : '非合法手'),
+        a.parsed ? h('code', null, `move = ${JSON.stringify(a.parsed.move)}`) : null,
+        h('span', { class: 'meta', style: 'margin:0' }, `${fmt.ms(a.latencyMs)} · in ${fmt.num(a.usage?.inputTokens)} / out ${fmt.num(a.usage?.outputTokens)}`),
+      ),
+      a.parsed ? h('div', { class: 'reason' }, '理由: ', a.parsed.reasoning) : null,
+      a.parseError ? h('div', { class: 'warn', style: 'margin-top:6px' }, a.parseError) : null,
+      h('details', null, h('summary', null, '生レスポンス'), h('pre', null, a.responseText || '(空)')),
+      retry && !a.legal ? h('div', { class: 'retry' }, '→ 送った再試行メッセージ:\n' + retry.content) : null,
+    ));
+  });
+  out.push(
+    h('details', null, h('summary', null, 'リクエスト: system'), h('pre', null, d.request.system)),
+    h('details', null, h('summary', null, 'リクエスト: user（初回）'), h('pre', null, d.request.messages[0]?.content ?? '')),
+  );
+  return out;
+}
+
+// ---------- loading & live updates ----------
+async function loadRuns() {
+  const runs = await fetch('/api/runs').then((r) => r.json());
+  const sel = document.getElementById('runSelect');
+  const prev = sel.value;
+  sel.replaceChildren(...runs.map((r) => h('option', { value: r.name }, `${r.name}  (${new Date(r.mtime).toLocaleString()})`)));
+  if (!runs.length) return;
+  const initial = ui.runName == null ? readHash() : null;
+  const wanted = initial?.run ?? prev;
+  const keep = runs.some((r) => r.name === wanted) ? wanted : runs[0].name;
+  sel.value = keep;
+  if (ui.runName !== keep) {
+    ui.runName = keep; ui.game = null; ui.turn = null; ui.rawText = '';
+    if (initial?.game != null) { ui.game = initial.game; ui.turn = initial.turn; setFollow(false); }
+    await loadRun();
+  }
+}
+
+async function loadRun() {
+  if (!ui.runName) return;
+  const text = await fetch('/api/runs/' + encodeURIComponent(ui.runName)).then((r) => r.text());
+  const live = document.getElementById('live');
+  if (text === ui.rawText) return;
+  ui.rawText = text;
+  const follow = document.getElementById('follow').checked;
+  const run = parseRun(text);
+  if (follow) { ui.game = run.games.at(-1)?.game ?? null; ui.turn = null; }
+  ui.run = run;
+  live.classList.toggle('on', !run.ended);
+  document.getElementById('liveText').textContent = run.ended ? '完了' : '実行中（自動更新）';
+  renderAll();
+}
+
+document.getElementById('runSelect').addEventListener('change', (e) => {
+  ui.runName = e.target.value; ui.game = null; ui.turn = null; ui.rawText = ''; loadRun();
+});
+document.addEventListener('keydown', (e) => {
+  if (!ui.run || e.target.tagName === 'INPUT' && e.target.type !== 'range' && e.target.type !== 'checkbox') return;
+  const g = currentGame(ui.run);
+  if (!g) return;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    e.preventDefault();
+    ui.turn = Math.max(0, Math.min(g.turns.length - 1, ui.turn + (e.key === 'ArrowRight' ? 1 : -1)));
+    setFollow(ui.turn === g.turns.length - 1 && g === ui.run.games.at(-1));
+    renderAll();
+  }
+});
+
+loadRuns();
+setInterval(async () => {
+  await loadRuns();
+  if (ui.run && !ui.run.ended) await loadRun();
+}, 2000);
+</script>
+</body>
+</html>
