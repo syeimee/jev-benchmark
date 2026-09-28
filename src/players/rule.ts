@@ -1,4 +1,4 @@
-import { type CriteriaVersion, type MoveFeatures, allMoveFeatures } from '../features.js';
+import { type MoveFeatures, allMoveFeatures } from '../features.js';
 import { countDiscs, toCoord } from '../othello.js';
 import type { Player } from './types.js';
 
@@ -11,7 +11,7 @@ const isXorC = (f: MoveFeatures) => (f.square.kind === 'x-square' || f.square.ki
  * Sort keys (lower is better), using only the facts that criteria `version`
  * gives Jev. The same priorities as STRATEGY_HINTS, applied mechanically.
  */
-function sortKey(f: MoveFeatures, version: CriteriaVersion, endgame: boolean): number[] {
+function sortKey(f: MoveFeatures, version: 'v1' | 'v2', endgame: boolean): number[] {
   if (version === 'v1') {
     return [isCorner(f), isXorC(f), endgame ? -f.flips.length : 0, f.oppMobility];
   }
@@ -32,7 +32,7 @@ function compare(a: number[], b: number[]): number {
 }
 
 /** Deterministic baseline: ties go to the earlier legal move. */
-export function createRulePlayer(version: CriteriaVersion): Player {
+export function createRulePlayer(version: 'v1' | 'v2'): Player {
   return {
     name: `rule(criteria=${version})`,
     async choose({ board, color }) {

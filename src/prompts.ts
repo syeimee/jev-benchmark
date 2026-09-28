@@ -1,4 +1,4 @@
-import { type CriteriaVersion, type MoveFeatures, moveFeatures } from './features.js';
+import { type CriteriaVersion, type MoveFeatures, moveFeatures, parseCriteria } from './features.js';
 import {
   type Board,
   type Color,
@@ -54,9 +54,15 @@ export function renderBoardPrompt(board: Board, color: Color): string {
 }
 
 /** §3: Jev question instructions. */
-export function jevInstructions(color: Color, hints: boolean): string {
-  const base = `Pick the move that gives ${colorName(color)} the best chance of winning this Othello game.`;
-  return hints ? `${base}\n${STRATEGY_HINTS}` : base;
+/** Added by `--strict-warning`: turns the v2 corner warning into an explicit rule. */
+export const STRICT_WARNING_RULE =
+  'Never choose a move marked WARNING if at least one move without WARNING is available.';
+
+export function jevInstructions(color: Color, hints: boolean, strictWarning = false): string {
+  const lines = [`Pick the move that gives ${colorName(color)} the best chance of winning this Othello game.`];
+  if (strictWarning) lines.push(STRICT_WARNING_RULE);
+  if (hints) lines.push(STRATEGY_HINTS);
+  return lines.join('\n');
 }
 
 function describeSquare(sq: MoveFeatures['square']): string {
@@ -93,15 +99,23 @@ export function describeMove(board: Board, color: Color, idx: number, version: C
     describeSquare(f.square),
     oppText,
   ];
-  if (version === 'v2') {
+  const extras = parseCriteria(version);
+  if (!extras) throw new Error(`Unknown criteria version: ${version}`);
+  if (extras.has('corner')) {
     parts.push(
       f.cornersGiven.length > 0
         ? `WARNING: gives the opponent access to corner ${f.cornersGiven.map(toCoord).join(', ')}.`
         : 'Gives the opponent no corner.',
-      `Stable discs: ${f.stableGain >= 0 ? '+' : ''}${f.stableGain} (you will have ${f.stableTotal}).`,
-      `After the opponent's best reply, you will have at least ${plural(f.worstCaseMobility, 'legal move')}.`,
-      `Discs after this move: you ${f.discsAfter.mine}, opponent ${f.discsAfter.theirs}.`,
     );
+  }
+  if (extras.has('stable')) {
+    parts.push(`Stable discs: ${f.stableGain >= 0 ? '+' : ''}${f.stableGain} (you will have ${f.stableTotal}).`);
+  }
+  if (extras.has('reply')) {
+    parts.push(`After the opponent's best reply, you will have at least ${plural(f.worstCaseMobility, 'legal move')}.`);
+  }
+  if (extras.has('discs')) {
+    parts.push(`Discs after this move: you ${f.discsAfter.mine}, opponent ${f.discsAfter.theirs}.`);
   }
   return parts.join(' ');
 }

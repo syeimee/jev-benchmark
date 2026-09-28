@@ -128,6 +128,15 @@ v1 の 4 項目に続けて、コードで計算した以下を追加する（[s
    `After the opponent's best reply, you will have at least 4 legal moves.`
 8. 着手後の石数: `Discs after this move: you 4, opponent 1.`
 
+項目を個別に足すこともできる（切り分け用）: `jev:v1+corner`、`jev:v1+stable+reply` など。
+項目名は `corner`（5）、`stable`（6）、`reply`（7）、`discs`（8）。`v2` はすべてを含む。
+
+`--strict-warning` を付けると、Jev の instructions に次の 1 行を足す（ヒントの前）:
+
+```
+Never choose a move marked WARNING if at least one move without WARNING is available.
+```
+
 初期局面の d3（v2）:
 
 ```

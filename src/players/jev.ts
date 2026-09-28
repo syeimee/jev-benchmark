@@ -13,6 +13,8 @@ export interface JevPlayerOptions {
   policy: JevPolicy;
   rng: Rng;
   criteria?: CriteriaVersion;
+  /** Add STRICT_WARNING_RULE to the instructions. */
+  strictWarning?: boolean;
 }
 
 export function createJevPlayer({
@@ -21,17 +23,18 @@ export function createJevPlayer({
   policy,
   rng,
   criteria = 'v1',
+  strictWarning = false,
 }: JevPlayerOptions): Player {
   const modelId = typeof model === 'string' ? model : model.modelId;
   return {
-    name: `jev(${modelId},${policy},hints=${hints ? 'on' : 'off'},criteria=${criteria})`,
+    name: `jev(${modelId},${policy},hints=${hints ? 'on' : 'off'},criteria=${criteria}${strictWarning ? ',strict' : ''})`,
     async choose({ board, color, legalMoves }) {
       const request = {
         state: renderBoardPrompt(board, color),
         questions: {
           move: {
             type: 'choice' as const,
-            instructions: jevInstructions(color, hints),
+            instructions: jevInstructions(color, hints, strictWarning),
             criteria: buildCriteria(board, color, criteria),
           },
         },

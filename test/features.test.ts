@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { moveFeatures, stableDiscs } from '../src/features.js';
+import { moveFeatures, parseCriteria, stableDiscs } from '../src/features.js';
 import { playGame, randomOpening } from '../src/match.js';
 import { fromCoord, initialBoard, toCoord } from '../src/othello.js';
 import { createRandomPlayer } from '../src/players/random.js';
 import { createRulePlayer } from '../src/players/rule.js';
-import { buildCriteria } from '../src/prompts.js';
+import { STRATEGY_HINTS, STRICT_WARNING_RULE, buildCriteria, jevInstructions } from '../src/prompts.js';
 import { createRng } from '../src/rng.js';
 import { boardFrom } from './helpers.js';
 
@@ -78,5 +78,28 @@ describe('random opening', () => {
     const first = result.turns.slice(0, 4);
     expect(first.map((t) => (t.type === 'move' ? t.move : null))).toEqual(opening);
     expect(first.every((t) => t.type === 'move' && t.opening)).toBe(true);
+  });
+});
+
+describe('criteria ablations', () => {
+  it('parses v1, v2 and v1+extras', () => {
+    expect([...parseCriteria('v1')!]).toEqual([]);
+    expect([...parseCriteria('v2')!]).toEqual(['corner', 'stable', 'reply', 'discs']);
+    expect([...parseCriteria('v1+stable+corner')!]).toEqual(['stable', 'corner']);
+    expect(parseCriteria('v2+corner')).toBeNull();
+    expect(parseCriteria('v1+nope')).toBeNull();
+  });
+
+  it('adds only the requested facts', () => {
+    const d3 = buildCriteria(initialBoard(), 'black', 'v1+stable').d3!;
+    expect(d3).toContain('Stable discs: +0');
+    expect(d3).not.toContain('corner');
+    expect(d3).not.toContain('best reply');
+  });
+
+  it('puts the strict WARNING rule into the Jev instructions', () => {
+    expect(jevInstructions('black', true, true)).toBe(
+      `Pick the move that gives BLACK the best chance of winning this Othello game.\n${STRICT_WARNING_RULE}\n${STRATEGY_HINTS}`,
+    );
   });
 });

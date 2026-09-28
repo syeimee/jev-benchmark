@@ -12,7 +12,24 @@ import {
   squareKind,
 } from './othello.js';
 
-export type CriteriaVersion = 'v1' | 'v2';
+/** Optional v2 facts; `v2` means all of them. */
+export const CRITERIA_EXTRAS = ['corner', 'stable', 'reply', 'discs'] as const;
+export type CriteriaExtra = (typeof CRITERIA_EXTRAS)[number];
+
+/**
+ * `v1`, `v2`, or `v1+<extra>+...` (e.g. `v1+corner+stable`) for ablations.
+ * Validate with `parseCriteria`.
+ */
+export type CriteriaVersion = string;
+
+/** Returns the extras a criteria version includes, or null if the version is invalid. */
+export function parseCriteria(version: CriteriaVersion): Set<CriteriaExtra> | null {
+  if (version === 'v2') return new Set(CRITERIA_EXTRAS);
+  const [base, ...extras] = version.split('+');
+  if (base !== 'v1') return null;
+  if (!extras.every((e): e is CriteriaExtra => (CRITERIA_EXTRAS as readonly string[]).includes(e))) return null;
+  return new Set(extras);
+}
 
 const CORNERS = [index(0, 0), index(0, 7), index(7, 0), index(7, 7)];
 const AXES: ReadonlyArray<readonly [number, number]> = [[0, 1], [1, 0], [1, 1], [1, -1]];

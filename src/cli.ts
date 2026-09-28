@@ -2,7 +2,7 @@ import { appendFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { parseArgs } from 'node:util';
 import { captureRun } from './capture.js';
-import type { CriteriaVersion } from './features.js';
+import { type CriteriaVersion, parseCriteria } from './features.js';
 import { type GameRecord, playGame, randomOpening } from './match.js';
 import type { Color } from './othello.js';
 import { createGptPlayer } from './players/gpt.js';
@@ -19,12 +19,15 @@ const USAGE = `Usage: npm run bench -- [options]
                              <player> = jev | gpt | rule | random, optionally with a
                              criteria version: jev:v2, rule:v1 (default v1). For gpt the
                              version only matters with --annotate-moves.
+                             jev/gpt also accept ablations: v1+corner, v1+stable+reply, ...
+                             (extras: corner, stable, reply, discs; v2 = all). rule: v1|v2.
   --games <n>                Number of games (default: 2).
   --swap <on|off>            Alternate colors every game (default: on).
   --random-opening <n>       Play n random plies before handing over (default: 4).
                              With --swap on, each opening is played once from each side.
   --hints <on|off>           Include strategy hints for Jev and GPT (default: on).
   --policy <argmax|sample>   Jev move selection (default: argmax).
+  --strict-warning           Tell Jev to never pick a WARNING move when a safe one exists.
   --annotate-moves           Give GPT the same per-move descriptions Jev gets as criteria.
   --jev-model <id>           Gateway evaluation model (default: typesafe-ai/jev).
   --gpt-model <id>           Gateway language model (default: openai/gpt-5-mini).
@@ -42,10 +45,10 @@ interface PlayerSpec {
 function parsePlayer(value: string, flag: string): PlayerSpec {
   const [kind, criteria = 'v1', ...rest] = value.split(':');
   if (rest.length > 0) fail(`--${flag}: expected <kind>[:<version>], got ${value}`);
-  return {
-    kind: oneOf(kind!, ['jev', 'gpt', 'rule', 'random'] as const, flag),
-    criteria: oneOf(criteria, ['v1', 'v2'] as const, flag),
-  };
+  const parsedKind = oneOf(kind!, ['jev', 'gpt', 'rule', 'random'] as const, flag);
+  if (parsedKind === 'rule') oneOf(criteria, ['v1', 'v2'] as const, flag);
+  else if (!parseCriteria(criteria)) fail(`--${flag}: unknown criteria version ${criteria}`);
+  return { kind: parsedKind, criteria };
 }
 
 function fail(message: string): never {
@@ -67,6 +70,7 @@ const { values } = parseArgs({
     'random-opening': { type: 'string', default: '4' },
     hints: { type: 'string', default: 'on' },
     policy: { type: 'string', default: 'argmax' },
+    'strict-warning': { type: 'boolean', default: false },
     'annotate-moves': { type: 'boolean', default: false },
     'jev-model': { type: 'string', default: 'typesafe-ai/jev' },
     'gpt-model': { type: 'string', default: 'openai/gpt-5-mini' },
@@ -104,11 +108,11 @@ if (usesApi && !process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN
 function createPlayer({ kind, criteria }: PlayerSpec, rng: Rng): Player {
   switch (kind) {
     case 'jev':
-      return createJevPlayer({ model: values['jev-model'], hints, policy, rng, criteria });
+      return createJevPlayer({ model: values['jev-model'], hints, policy, rng, criteria, strictWarning: values['strict-warning'] });
     case 'gpt':
       return createGptPlayer({ model: values['gpt-model'], hints, annotateMoves: values['annotate-moves'], criteria });
     case 'rule':
-      return createRulePlayer(criteria);
+      return createRulePlayer(criteria as 'v1' | 'v2');
     case 'random':
       return createRandomPlayer(rng);
   }
@@ -127,6 +131,7 @@ const config = {
   randomOpening: openingPlies,
   hints,
   policy,
+  strictWarning: values['strict-warning'],
   annotateMoves: values['annotate-moves'],
   seed,
 };
