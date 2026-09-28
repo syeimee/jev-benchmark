@@ -1,6 +1,8 @@
 import { type LanguageModel, type ModelMessage, NoObjectGeneratedError, Output, generateText } from 'ai';
 import { z } from 'zod';
+import type { CriteriaVersion } from '../features.js';
 import { gptSystemPrompt, gptUserPrompt, illegalMoveMessage } from '../prompts.js';
+import { withRetries } from './retry.js';
 import type { Player } from './types.js';
 
 export const MAX_ILLEGAL_RETRIES = 2;
@@ -14,6 +16,8 @@ export interface GptPlayerOptions {
   model?: LanguageModel;
   hints: boolean;
   annotateMoves: boolean;
+  /** Which per-move descriptions `annotateMoves` appends. */
+  criteria?: CriteriaVersion;
 }
 
 interface Attempt {
@@ -23,18 +27,25 @@ interface Attempt {
   parseError?: string;
   legal: boolean;
   latencyMs: number;
+  /** Failed API attempts (outages, invalid responses) before this one succeeded. */
+  apiErrors: string[];
   usage: { inputTokens?: number; outputTokens?: number; reasoningTokens?: number };
   /** Includes the Gateway's per-request cost under `gateway.cost`. */
   providerMetadata?: unknown;
 }
 
-export function createGptPlayer({ model = 'openai/gpt-5-mini', hints, annotateMoves }: GptPlayerOptions): Player {
+export function createGptPlayer({
+  model = 'openai/gpt-5-mini',
+  hints,
+  annotateMoves,
+  criteria = 'v1',
+}: GptPlayerOptions): Player {
   const modelId = typeof model === 'string' ? model : model.modelId;
   const system = gptSystemPrompt(hints);
   return {
-    name: `gpt(${modelId},hints=${hints ? 'on' : 'off'}${annotateMoves ? ',annotated' : ''})`,
+    name: `gpt(${modelId},hints=${hints ? 'on' : 'off'}${annotateMoves ? `,annotated=${criteria}` : ''})`,
     async choose({ board, color, legalMoves }) {
-      const messages: ModelMessage[] = [{ role: 'user', content: gptUserPrompt(board, color, annotateMoves) }];
+      const messages: ModelMessage[] = [{ role: 'user', content: gptUserPrompt(board, color, annotateMoves, criteria) }];
       const attempts: Attempt[] = [];
       const detail = () => {
         const inputTokens = attempts.reduce((s, a) => s + (a.usage.inputTokens ?? 0), 0);
@@ -48,13 +59,16 @@ export function createGptPlayer({ model = 'openai/gpt-5-mini', hints, annotateMo
         const started = performance.now();
         let current: Attempt;
         try {
-          const result = await generateText({ model, system, messages, output: Output.object({ schema: moveSchema }) });
+          const { value: result, errors: apiErrors } = await withRetries(() =>
+            generateText({ model, system, messages, output: Output.object({ schema: moveSchema }) }),
+          );
           const move = result.output.move.trim().toLowerCase();
           current = {
             responseText: result.text,
             parsed: result.output,
             legal: legalMoves.includes(move),
             latencyMs: 0,
+            apiErrors,
             usage: {
               inputTokens: result.usage.inputTokens,
               outputTokens: result.usage.outputTokens,
@@ -70,6 +84,7 @@ export function createGptPlayer({ model = 'openai/gpt-5-mini', hints, annotateMo
             parseError: error.message,
             legal: false,
             latencyMs: 0,
+            apiErrors: [],
             usage: { inputTokens: error.usage?.inputTokens, outputTokens: error.usage?.outputTokens },
           };
         }

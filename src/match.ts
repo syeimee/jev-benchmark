@@ -12,6 +12,7 @@ import {
   toCoord,
 } from './othello.js';
 import type { Player } from './players/types.js';
+import type { Rng } from './rng.js';
 
 interface TurnBase {
   color: Color;
@@ -30,6 +31,8 @@ export type TurnRecord = TurnBase &
         move: string;
         /** True when the only legal move was played without calling the player. */
         forced: boolean;
+        /** True for the pre-set random opening plies (see `randomOpening`). */
+        opening?: boolean;
         detail?: Record<string, unknown>;
       }
     | { type: 'illegal'; number: number; attempts: string[]; detail?: Record<string, unknown> }
@@ -45,9 +48,26 @@ export interface GameRecord {
   durationMs: number;
 }
 
+/** Random legal plies from the start position, so deterministic players still produce varied games. */
+export function randomOpening(plies: number, rng: Rng): string[] {
+  let board = initialBoard();
+  let color: Color = 'black';
+  const moves: string[] = [];
+  for (let i = 0; i < plies; i++) {
+    const legal = legalMoves(board, color);
+    if (legal.length === 0) break;
+    const idx = legal[Math.floor(rng() * legal.length)]!;
+    board = applyMove(board, color, idx);
+    moves.push(toCoord(idx));
+    color = opponent(color);
+  }
+  return moves;
+}
+
 export async function playGame(
   players: Record<Color, Player>,
   onTurn?: (turn: TurnRecord) => void,
+  opening: readonly string[] = [],
 ): Promise<GameRecord> {
   const started = Date.now();
   let board = initialBoard();
@@ -74,8 +94,12 @@ export async function playGame(
     const legal = legalMoves(board, color).map(toCoord);
     const number = moveNumber(board);
 
+    const ply = turns.length;
     // Passes and forced moves skip the API for every player, so call counts stay comparable.
-    if (legal.length === 0) {
+    if (ply < opening.length) {
+      board = applyMove(board, color, fromCoord(opening[ply]!)!);
+      record({ color, board: boardToString(board), legalMoves: legal, type: 'move', number, move: opening[ply]!, forced: false, opening: true });
+    } else if (legal.length === 0) {
       record({ color, board: boardToString(board), legalMoves: legal, type: 'pass' });
     } else if (legal.length === 1) {
       board = applyMove(board, color, fromCoord(legal[0]!)!);

@@ -17,11 +17,15 @@ npm run bench                                    # Jev vs GPT を 2 局（先後
 npm run bench -- --games 10 --hints off
 npm run bench -- --gpt-model openai/gpt-5-nano --annotate-moves
 npm run bench -- --policy sample --seed 42
-npm run bench -- --p1 random --p2 random         # API キーなしで動作確認
+npm run bench -- --p1 jev:v2 --p2 rule:v2 --games 20   # criteria v2 の Jev vs ルールベース
+npm run bench -- --p1 rule:v1 --p2 random --games 40   # API キーなしで動作確認
 npm run bench -- --help
 ```
 
-結果は `results/<timestamp>.jsonl` に 1 手ずつ追記される。
+- プレイヤー: `jev` / `gpt` / `rule`（ルールベース）/ `random`。`:v2` を付けると criteria v2（先読みの結果入り）を使う。
+- 最初の 4 手はランダム（`--random-opening`）。同じ序盤を先後入れ替えて 2 局ずつ打つ。
+
+結果は `results/<timestamp>.jsonl` に 1 手ずつ追記される。1 手ごとの画像が欲しいときは `npm run capture -- <jsonl>`。
 
 ## ビューア
 

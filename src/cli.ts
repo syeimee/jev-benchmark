@@ -2,20 +2,27 @@ import { appendFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { parseArgs } from 'node:util';
 import { captureRun } from './capture.js';
-import { type GameRecord, playGame } from './match.js';
+import type { CriteriaVersion } from './features.js';
+import { type GameRecord, playGame, randomOpening } from './match.js';
 import type { Color } from './othello.js';
 import { createGptPlayer } from './players/gpt.js';
 import { type JevPolicy, createJevPlayer } from './players/jev.js';
 import { createRandomPlayer } from './players/random.js';
+import { createRulePlayer } from './players/rule.js';
 import type { Player } from './players/types.js';
 import { type Rng, createRng } from './rng.js';
 
 const USAGE = `Usage: npm run bench -- [options]
 
-  --p1 <jev|gpt|random>      Player 1 (default: jev). Plays black in game 1.
-  --p2 <jev|gpt|random>      Player 2 (default: gpt).
+  --p1 <player>              Player 1 (default: jev). Plays black in game 1.
+  --p2 <player>              Player 2 (default: gpt).
+                             <player> = jev | gpt | rule | random, optionally with a
+                             criteria version: jev:v2, rule:v1 (default v1). For gpt the
+                             version only matters with --annotate-moves.
   --games <n>                Number of games (default: 2).
   --swap <on|off>            Alternate colors every game (default: on).
+  --random-opening <n>       Play n random plies before handing over (default: 4).
+                             With --swap on, each opening is played once from each side.
   --hints <on|off>           Include strategy hints for Jev and GPT (default: on).
   --policy <argmax|sample>   Jev move selection (default: argmax).
   --annotate-moves           Give GPT the same per-move descriptions Jev gets as criteria.
@@ -26,7 +33,20 @@ const USAGE = `Usage: npm run bench -- [options]
   --capture                  After each game, save one PNG per turn to captures/<run name>/.
   --verbose                  Print every turn.`;
 
-type PlayerKind = 'jev' | 'gpt' | 'random';
+type PlayerKind = 'jev' | 'gpt' | 'rule' | 'random';
+interface PlayerSpec {
+  kind: PlayerKind;
+  criteria: CriteriaVersion;
+}
+
+function parsePlayer(value: string, flag: string): PlayerSpec {
+  const [kind, criteria = 'v1', ...rest] = value.split(':');
+  if (rest.length > 0) fail(`--${flag}: expected <kind>[:<version>], got ${value}`);
+  return {
+    kind: oneOf(kind!, ['jev', 'gpt', 'rule', 'random'] as const, flag),
+    criteria: oneOf(criteria, ['v1', 'v2'] as const, flag),
+  };
+}
 
 function fail(message: string): never {
   console.error(`${message}\n\n${USAGE}`);
@@ -44,6 +64,7 @@ const { values } = parseArgs({
     p2: { type: 'string', default: 'gpt' },
     games: { type: 'string', default: '2' },
     swap: { type: 'string', default: 'on' },
+    'random-opening': { type: 'string', default: '4' },
     hints: { type: 'string', default: 'on' },
     policy: { type: 'string', default: 'argmax' },
     'annotate-moves': { type: 'boolean', default: false },
@@ -62,9 +83,10 @@ if (values.help) {
   process.exit(0);
 }
 
-const kinds = ['jev', 'gpt', 'random'] as const;
-const p1Kind = oneOf(values.p1, kinds, 'p1');
-const p2Kind = oneOf(values.p2, kinds, 'p2');
+const p1Spec = parsePlayer(values.p1, 'p1');
+const p2Spec = parsePlayer(values.p2, 'p2');
+const openingPlies = Number(values['random-opening']);
+if (!Number.isInteger(openingPlies) || openingPlies < 0) fail('--random-opening must be a non-negative integer');
 const games = Number(values.games);
 if (!Number.isInteger(games) || games < 1) fail('--games must be a positive integer');
 const swap = oneOf(values.swap, ['on', 'off'], 'swap') === 'on';
@@ -74,27 +96,40 @@ const seed = values.seed === undefined ? Date.now() : Number(values.seed);
 if (!Number.isInteger(seed)) fail('--seed must be an integer');
 const out = values.out ?? `results/${new Date().toISOString().replace(/[:.]/g, '-')}.jsonl`;
 
-if ((p1Kind !== 'random' || p2Kind !== 'random') && !process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
+const usesApi = [p1Spec, p2Spec].some((p) => p.kind === 'jev' || p.kind === 'gpt');
+if (usesApi && !process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
   fail('AI_GATEWAY_API_KEY is not set (put it in .env or the environment).');
 }
 
-function createPlayer(kind: PlayerKind, rng: Rng): Player {
+function createPlayer({ kind, criteria }: PlayerSpec, rng: Rng): Player {
   switch (kind) {
     case 'jev':
-      return createJevPlayer({ model: values['jev-model'], hints, policy, rng });
+      return createJevPlayer({ model: values['jev-model'], hints, policy, rng, criteria });
     case 'gpt':
-      return createGptPlayer({ model: values['gpt-model'], hints, annotateMoves: values['annotate-moves'] });
+      return createGptPlayer({ model: values['gpt-model'], hints, annotateMoves: values['annotate-moves'], criteria });
+    case 'rule':
+      return createRulePlayer(criteria);
     case 'random':
       return createRandomPlayer(rng);
   }
 }
 
 // Each slot gets its own RNG stream so one player's sampling doesn't shift the other's.
-const p1 = createPlayer(p1Kind, createRng(seed));
-const p2 = createPlayer(p2Kind, createRng(seed + 1));
+const p1 = createPlayer(p1Spec, createRng(seed));
+const p2 = createPlayer(p2Spec, createRng(seed + 1));
 
 mkdirSync(dirname(out), { recursive: true });
-const config = { p1: p1.name, p2: p2.name, games, swap, hints, policy, annotateMoves: values['annotate-moves'], seed };
+const config = {
+  p1: p1.name,
+  p2: p2.name,
+  games,
+  swap,
+  randomOpening: openingPlies,
+  hints,
+  policy,
+  annotateMoves: values['annotate-moves'],
+  seed,
+};
 console.log(`Config: ${JSON.stringify(config)}\nWriting to ${out}\n`);
 
 // One JSON event per line, appended as it happens so the viewer can follow a run live.
@@ -113,17 +148,20 @@ for (let game = 1; game <= games; game++) {
   const p1Color: Color = swap && game % 2 === 0 ? 'white' : 'black';
   const p2Color: Color = p1Color === 'black' ? 'white' : 'black';
   const players = { [p1Color]: p1, [p2Color]: p2 } as Record<Color, Player>;
-  console.log(`Game ${game}/${games}: black=${players.black.name} white=${players.white.name}`);
-  emit({ type: 'game_start', game, black: players.black.name, white: players.white.name, p1Color });
+  // Consecutive games share an opening when colors swap, so each side plays it once.
+  const openingIndex = swap ? Math.floor((game - 1) / 2) : game - 1;
+  const opening = randomOpening(openingPlies, createRng(seed + 1000 + openingIndex));
+  console.log(`Game ${game}/${games}: black=${players.black.name} white=${players.white.name} opening=${opening.join(' ') || '-'}`);
+  emit({ type: 'game_start', game, black: players.black.name, white: players.white.name, p1Color, opening });
 
   let result: GameRecord;
   try {
     result = await playGame(players, (turn) => {
       emit({ type: 'turn', game, turn });
       if (!values.verbose) return;
-      const label = turn.type === 'pass' ? 'pass' : turn.type === 'illegal' ? `ILLEGAL ${turn.attempts.join(' / ')}` : `${turn.number}. ${turn.move}${turn.forced ? ' (forced)' : ''}`;
+      const label = turn.type === 'pass' ? 'pass' : turn.type === 'illegal' ? `ILLEGAL ${turn.attempts.join(' / ')}` : `${turn.number}. ${turn.move}${turn.forced ? ' (forced)' : ''}${turn.opening ? ' (opening)' : ''}`;
       console.log(`  ${turn.color.padEnd(5)} ${label}`);
-    });
+    }, opening);
   } catch (error) {
     // API failures void the game instead of counting as a loss for either side.
     console.error(`  error: ${error instanceof Error ? error.message : String(error)}`);

@@ -5,6 +5,7 @@ Jev と GPT に渡す指示プロンプトの定義。両者に **同じ盤面�
 
 - `--hints on|off` で戦略ヒントの有無を切り替える（デフォルト `on`）。
 - `--annotate-moves` で、Jev の criteria と同じ「合法手ごとの説明」を GPT にも渡す（デフォルト off）。
+- criteria には v1（基本）と v2（先読みの結果を追加）がある。プレイヤー指定で選ぶ（`--p1 jev:v2`）。
 
 実装: [src/prompts.ts](../src/prompts.ts)。以下の例はすべて実装から生成したもの。
 
@@ -16,6 +17,10 @@ Jev と GPT に渡す指示プロンプトの定義。両者に **同じ盤面�
 - **唯一手**（合法手 1）: どちらのプレイヤーも API を呼ばずにその手を打つ（`forced: true` として記録）。
 - 手数 `Move N` = 盤上の石数 − 4 + 1。**パスは数えない。**
 - 合法手の順序は a1, b1, …, h1, a2, …（行→列）で固定する。
+- `--random-opening N`（デフォルト 4）: 最初の N 手はランダムな合法手を打ち、プレイヤーは呼ばない（`opening: true` として記録）。
+  決定的なプレイヤー同士でも局ごとに違う展開にするため。`--swap on` のときは、同じ序盤を先後入れ替えて 2 局ずつ打つ。
+- API の一時障害（SDK の再試行を使い切った 503 など）と、SDK が不正と判定した応答（Jev の `choice` が確率最大の選択肢でない等）は、
+  2 秒・5 秒・10 秒の間隔で最大 3 回まで再試行する。失敗した試行は `detail.apiErrors` に残す。
 
 ---
 
@@ -111,6 +116,25 @@ key は座標文字列で、順序は合法手リストと同じ。説明文に�
 3. マスの種類: `CORNER square (permanent)` / `Edge square` / `X-square (diagonally adjacent to an empty corner a1)` / `C-square (adjacent to an empty corner a1)` / `Interior square`
    - X/C-square と判定するのは隣の隅が **空いているときだけ**。隅が埋まっていれば Interior / Edge として扱う。
 4. 着手後の相手の合法手数（0 のときは `(they must pass)` を付ける）
+
+#### v2 で追加する情報（`--p1 jev:v2`）
+
+v1 の 4 項目に続けて、コードで計算した以下を追加する（[src/features.ts](../src/features.ts)）。
+
+5. 相手に隅を渡すか: `WARNING: gives the opponent access to corner a1.` / `Gives the opponent no corner.`
+6. 確定石（二度と返されない石）の増減と合計: `Stable discs: +1 (you will have 3).`
+   （保守的な近似。数え漏れはあり得るが、過大には数えない）
+7. 相手が「こちらの着手可能数を最小にする手」で返したあとの、自分の着手可能数（2 手先）:
+   `After the opponent's best reply, you will have at least 4 legal moves.`
+8. 着手後の石数: `Discs after this move: you 4, opponent 1.`
+
+初期局面の d3（v2）:
+
+```
+Play d3 (row 3, column d). Flips 1 disc: d4. Interior square. Opponent will have 3 legal moves after this. Gives the opponent no corner. Stable discs: +0 (you will have 0). After the opponent's best reply, you will have at least 4 legal moves. Discs after this move: you 4, opponent 1.
+```
+
+#### v1 の例
 
 第1節の局面での例（一部）:
 
@@ -226,7 +250,16 @@ Choose one of these exactly.
 
 ---
 
-## 6. 公平性のメモ
+## 6. ルールベースのプレイヤー（`rule:v1` / `rule:v2`）
+
+Jev が「criteria に書いた情報を機械的に使う」以上の判断をしているかを測るための比較対象。
+各バージョンの criteria と **同じ情報だけ** を使い、以下のキーを左から比べて最小の手を選ぶ（同点は合法手順で先の手）。
+終盤は空きマスが 10 以下のとき。
+
+- v1: 隅でない → X/C-square → （終盤のみ）返す石が多い → 相手の着手可能数が少ない
+- v2: 隅でない → 相手に渡す隅の数 → （終盤のみ）着手後の自石が多い → X/C-square → 確定石の増加が多い → 相手の着手可能数が少ない → 2 手先の自分の着手可能数が多い
+
+## 7. 公平性のメモ
 
 - 盤面テキスト・合法手リスト・戦略ヒントは両者に同一のものを渡す。
 - パス・唯一手ではどちらも API を呼ばないので、呼び出し回数の条件も揃う。

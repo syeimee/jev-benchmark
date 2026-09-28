@@ -1,6 +1,8 @@
 import { experimental_evaluate, type Experimental_EvaluationModel } from 'ai';
+import type { CriteriaVersion } from '../features.js';
 import { buildCriteria, jevInstructions, renderBoardPrompt } from '../prompts.js';
 import { type Rng, sampleKey } from '../rng.js';
+import { withRetries } from './retry.js';
 import type { Player } from './types.js';
 
 export type JevPolicy = 'argmax' | 'sample';
@@ -10,12 +12,19 @@ export interface JevPlayerOptions {
   hints: boolean;
   policy: JevPolicy;
   rng: Rng;
+  criteria?: CriteriaVersion;
 }
 
-export function createJevPlayer({ model = 'typesafe-ai/jev', hints, policy, rng }: JevPlayerOptions): Player {
+export function createJevPlayer({
+  model = 'typesafe-ai/jev',
+  hints,
+  policy,
+  rng,
+  criteria = 'v1',
+}: JevPlayerOptions): Player {
   const modelId = typeof model === 'string' ? model : model.modelId;
   return {
-    name: `jev(${modelId},${policy},hints=${hints ? 'on' : 'off'})`,
+    name: `jev(${modelId},${policy},hints=${hints ? 'on' : 'off'},criteria=${criteria})`,
     async choose({ board, color, legalMoves }) {
       const request = {
         state: renderBoardPrompt(board, color),
@@ -23,12 +32,12 @@ export function createJevPlayer({ model = 'typesafe-ai/jev', hints, policy, rng 
           move: {
             type: 'choice' as const,
             instructions: jevInstructions(color, hints),
-            criteria: buildCriteria(board, color),
+            criteria: buildCriteria(board, color, criteria),
           },
         },
       };
       const started = performance.now();
-      const result = await experimental_evaluate({ model, ...request });
+      const { value: result, errors: apiErrors } = await withRetries(() => experimental_evaluate({ model, ...request }));
       const latencyMs = Math.round(performance.now() - started);
 
       const answer = result.answers.move;
@@ -49,6 +58,8 @@ export function createJevPlayer({ model = 'typesafe-ai/jev', hints, policy, rng 
         },
         // 'sample' silently degrades to argmax when no distribution is returned.
         sampled,
+        // Failed API attempts before the one that succeeded; latencyMs includes them.
+        apiErrors,
         latencyMs,
         usage: result.usage,
       };

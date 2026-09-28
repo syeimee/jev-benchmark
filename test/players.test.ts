@@ -65,6 +65,23 @@ describe('jev player', () => {
     }
     expect([...moves].sort()).toEqual(['d3', 'f5']);
   });
+  it('retries when Jev picks an option that is not its highest-probability one', async () => {
+    let calls = 0;
+    const model = new Experimental_EvaluationMockModelV4({
+      doEvaluate: async () => {
+        calls++;
+        const choice = calls === 1 ? 'c4' : 'd3';
+        return {
+          answers: { move: { type: 'choice', choice, probabilities: { d3: 0.7, c4: 0.1, f5: 0.1, e6: 0.1 } } },
+          warnings: [],
+        };
+      },
+    });
+    const player = createJevPlayer({ model, hints: true, policy: 'argmax', rng: createRng(1) });
+    const decision = await player.choose(opening);
+    expect(decision).toMatchObject({ kind: 'move', move: 'd3' });
+    expect(decision.detail?.apiErrors).toEqual(['Question "move" did not select a highest-probability option.']);
+  }, 10_000);
 });
 
 describe('gpt player', () => {

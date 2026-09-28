@@ -248,7 +248,7 @@ function parseRun(text) {
 
 function apiCalls(turn) {
   const d = turn.detail;
-  if (!d) return 0;
+  if (!d || d.player === 'rule') return 0;
   return d.player === 'gpt' ? d.attempts.length : 1;
 }
 
@@ -501,6 +501,7 @@ function renderTurnList(g, go) {
   const rows = g.turns.map((t, i) => {
     const badges = [];
     if (t.type === 'move' && t.forced) badges.push(h('span', { class: 'badge' }, '唯一手'));
+    if (t.type === 'move' && t.opening) badges.push(h('span', { class: 'badge' }, 'ランダム序盤'));
     if (t.type === 'illegal') badges.push(h('span', { class: 'badge bad' }, '反則'));
     if (t.detail?.player === 'gpt' && t.detail.attempts.length > 1) badges.push(h('span', { class: 'badge bad' }, `再試行 ${t.detail.attempts.length - 1}`));
     if (t.detail?.player === 'jev' && t.detail.sampled) badges.push(h('span', { class: 'badge' }, 'sample'));
@@ -533,10 +534,12 @@ function renderDetail(g, t, before) {
   const parts = [head, h('div', { class: 'meta' }, meta.join(' · '))];
 
   if (t.type === 'pass') parts.push(h('div', { class: 'note' }, '合法手がないためパスしました。API は呼んでいません。'));
+  else if (t.type === 'move' && t.opening) parts.push(h('div', { class: 'note' }, '対局開始時のランダム序盤の手です（--random-opening）。プレイヤーは呼んでいません。'));
   else if (t.type === 'move' && t.forced) parts.push(h('div', { class: 'note' }, '合法手が 1 つだけなので自動で着手しました。API は呼んでいません。'));
   else if (!d) parts.push(h('div', { class: 'note' }, 'このプレイヤーはリクエスト/レスポンスを記録していません（random など）。'));
   else if (d.player === 'jev') parts.push(...renderJev(t, d));
   else if (d.player === 'gpt') parts.push(...renderGpt(t, d));
+  else if (d.player === 'rule') parts.push(...renderRule(t, d));
   if (d) parts.push(h('details', null, h('summary', null, 'ターンの生データ（JSON）'), h('pre', null, JSON.stringify(t, null, 2))));
   return h('div', { class: 'detail' }, parts);
 }
@@ -572,6 +575,22 @@ function renderJev(t, d) {
     h('details', null, h('summary', null, 'レスポンス（answers / providerMetadata / warnings）'), h('pre', null, JSON.stringify(d.response, null, 2))),
   );
   return out;
+}
+
+const RULE_KEYS = {
+  v1: ['隅でない', 'X/C', '終盤: −反転数', '相手の着手可能数'],
+  v2: ['隅でない', '相手に渡す隅', '終盤: −自石数', 'X/C', '−確定石増', '相手の着手可能数', '−2手先の自分の着手可能数'],
+};
+function renderRule(t, d) {
+  const names = RULE_KEYS[d.version] || [];
+  return [
+    h('div', { class: 'meta' }, `ルールベース（criteria ${d.version}${d.endgame ? '、終盤' : ''}）。キーを左から順に比べ、小さい手を選びます。`),
+    h('div', { class: 'table-wrap' }, h('table', null,
+      h('thead', null, h('tr', null, h('th', null, '手'), names.map((n) => h('th', { class: 'num' }, n)))),
+      h('tbody', null, d.ranking.map((r) => h('tr', { class: r.move === t.move ? 'selected' : null },
+        h('td', null, h('code', null, r.move)), r.key.map((k) => h('td', { class: 'num' }, k))))),
+    )),
+  ];
 }
 
 function renderGpt(t, d) {

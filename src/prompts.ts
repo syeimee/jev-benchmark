@@ -1,15 +1,12 @@
+import { type CriteriaVersion, type MoveFeatures, moveFeatures } from './features.js';
 import {
   type Board,
   type Color,
   SIZE,
-  applyMove,
   countDiscs,
-  flipsFor,
   index,
   legalMoves,
   moveNumber,
-  opponent,
-  squareKind,
   toCoord,
 } from './othello.js';
 
@@ -62,8 +59,7 @@ export function jevInstructions(color: Color, hints: boolean): string {
   return hints ? `${base}\n${STRATEGY_HINTS}` : base;
 }
 
-function describeSquare(board: Board, idx: number): string {
-  const sq = squareKind(board, idx);
+function describeSquare(sq: MoveFeatures['square']): string {
   switch (sq.kind) {
     case 'corner':
       return 'CORNER square (permanent).';
@@ -78,29 +74,43 @@ function describeSquare(board: Board, idx: number): string {
   }
 }
 
-/** One-line description of a legal move: flips, square kind, opponent mobility. */
-export function describeMove(board: Board, color: Color, idx: number): string {
+/**
+ * One-line description of a legal move.
+ * v1: flips, square kind, opponent mobility.
+ * v2: v1 plus lookahead facts computed by code (corner access, stability,
+ * 2-ply mobility, disc count).
+ */
+export function describeMove(board: Board, color: Color, idx: number, version: CriteriaVersion = 'v1'): string {
+  const f = moveFeatures(board, color, idx);
   const coord = toCoord(idx);
-  const flips = flipsFor(board, color, idx);
-  const after = applyMove(board, color, idx);
-  const oppMoves = legalMoves(after, opponent(color)).length;
   const oppText =
-    oppMoves === 0
+    f.oppMobility === 0
       ? 'Opponent will have 0 legal moves after this (they must pass).'
-      : `Opponent will have ${plural(oppMoves, 'legal move')} after this.`;
-  return [
+      : `Opponent will have ${plural(f.oppMobility, 'legal move')} after this.`;
+  const parts = [
     `Play ${coord} (row ${coord[1]}, column ${coord[0]}).`,
-    `Flips ${plural(flips.length, 'disc')}: ${flips.map(toCoord).join(', ')}.`,
-    describeSquare(board, idx),
+    `Flips ${plural(f.flips.length, 'disc')}: ${f.flips.map(toCoord).join(', ')}.`,
+    describeSquare(f.square),
     oppText,
-  ].join(' ');
+  ];
+  if (version === 'v2') {
+    parts.push(
+      f.cornersGiven.length > 0
+        ? `WARNING: gives the opponent access to corner ${f.cornersGiven.map(toCoord).join(', ')}.`
+        : 'Gives the opponent no corner.',
+      `Stable discs: ${f.stableGain >= 0 ? '+' : ''}${f.stableGain} (you will have ${f.stableTotal}).`,
+      `After the opponent's best reply, you will have at least ${plural(f.worstCaseMobility, 'legal move')}.`,
+      `Discs after this move: you ${f.discsAfter.mine}, opponent ${f.discsAfter.theirs}.`,
+    );
+  }
+  return parts.join(' ');
 }
 
 /** §3: Jev choice criteria, keyed by coordinate in legal-move order. */
-export function buildCriteria(board: Board, color: Color): Record<string, string> {
+export function buildCriteria(board: Board, color: Color, version: CriteriaVersion = 'v1'): Record<string, string> {
   const criteria: Record<string, string> = {};
   for (const idx of legalMoves(board, color)) {
-    criteria[toCoord(idx)] = describeMove(board, color, idx);
+    criteria[toCoord(idx)] = describeMove(board, color, idx, version);
   }
   return criteria;
 }
@@ -123,10 +133,15 @@ export function gptSystemPrompt(hints: boolean): string {
  * §4: GPT user prompt. With `annotateMoves` the same per-move descriptions Jev
  * receives as criteria are appended, so both players see identical facts.
  */
-export function gptUserPrompt(board: Board, color: Color, annotateMoves: boolean): string {
+export function gptUserPrompt(
+  board: Board,
+  color: Color,
+  annotateMoves: boolean,
+  version: CriteriaVersion = 'v1',
+): string {
   const parts = [renderBoardPrompt(board, color)];
   if (annotateMoves) {
-    const details = Object.entries(buildCriteria(board, color)).map(
+    const details = Object.entries(buildCriteria(board, color, version)).map(
       ([coord, text]) => `- ${coord}: ${text}`,
     );
     parts.push(`Move details:\n${details.join('\n')}`);
