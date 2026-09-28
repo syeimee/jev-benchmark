@@ -23,7 +23,9 @@ interface Attempt {
   parseError?: string;
   legal: boolean;
   latencyMs: number;
-  usage: { inputTokens?: number; outputTokens?: number };
+  usage: { inputTokens?: number; outputTokens?: number; reasoningTokens?: number };
+  /** Includes the Gateway's per-request cost under `gateway.cost`. */
+  providerMetadata?: unknown;
 }
 
 export function createGptPlayer({ model = 'openai/gpt-5-mini', hints, annotateMoves }: GptPlayerOptions): Player {
@@ -53,7 +55,12 @@ export function createGptPlayer({ model = 'openai/gpt-5-mini', hints, annotateMo
             parsed: result.output,
             legal: legalMoves.includes(move),
             latencyMs: 0,
-            usage: { inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens },
+            usage: {
+              inputTokens: result.usage.inputTokens,
+              outputTokens: result.usage.outputTokens,
+              reasoningTokens: result.usage.outputTokenDetails.reasoningTokens,
+            },
+            providerMetadata: result.providerMetadata,
           };
         } catch (error) {
           // Output that fails the schema counts as an illegal answer, not a crash.

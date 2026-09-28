@@ -220,7 +220,9 @@ Choose one of these exactly.
 `turn.detail` には実際のリクエストとレスポンスをそのまま残す:
 
 - Jev: `request`（state / questions）、`response`（answers・probabilities、providerMetadata、warnings）、レイテンシ、トークン数
-- GPT: `request`（system と、再試行を含む全 messages）、`attempts[]`（各試行の生テキスト、解析結果、合法かどうか、レイテンシ、トークン数）
+- GPT: `request`（system と、再試行を含む全 messages）、`attempts[]`（各試行の生テキスト、解析結果、合法かどうか、レイテンシ、トークン数と推論トークン数、providerMetadata）
+
+どちらも Gateway の実コストが `providerMetadata.gateway.cost`（USD、文字列）に入る。Jev は `detail.response.providerMetadata`、GPT は `detail.attempts[].providerMetadata` にある。JSON として解析できなかった GPT の試行にはコストが残らない。
 
 ---
 
