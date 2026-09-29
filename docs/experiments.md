@@ -16,7 +16,7 @@
 
 ### O-1. Jev vs GPT（初回、1 局）
 
-- 日時: 2026-09-28 / コミット: d42fef5 に記録
+- 日時: 2026-09-28 / コミット: 3072adf に記録
 - 目的: 両モデルの振る舞いを最初に見る
 - コマンド: `npm run bench -- --games 1 --verbose`（`--random-opening` 導入前）
 - 結果ファイル: `results/2026-09-28T12-39-37-653Z.jsonl`
@@ -27,7 +27,7 @@
 
 ### O-2. criteria v2 とルールベース（フェーズ 2、各 20 局）
 
-- コミット: 3660430
+- コミット: 44f4627
 - 目的: 先読みの情報（隅の警告・確定石・2 手先の着手可能数・石数）を criteria に足すと Jev は強くなるか
 - コマンド: `npm run bench -- --p1 <A> --p2 <B> --games 20 --seed 101 --out results/phase2-<name>.jsonl`
 - 結果:
@@ -44,7 +44,7 @@
 
 ### O-3. 原因の切り分け（フェーズ 3、各 20 局、相手は rule:v2）
 
-- コミット: ba537f1
+- コミット: 6103d4d
 - コマンド: `npm run bench -- --p1 jev:<条件> --p2 rule:v2 --games 20 --seed 101 [--strict-warning] --out results/phase3-<name>.jsonl`
 - 結果:
 
@@ -61,7 +61,7 @@
 
 ### O-4. ルールで悪手を除いてから Jev（フェーズ 4、各 20 局、相手は rule:v2）
 
-- コミット: 7c72eba
+- コミット: 9ebcd39
 - コマンド: `npm run bench -- --p1 filter-jev|filter-random --p2 rule:v2 --games 20 --seed 101 --out results/phase4-<name>.jsonl`
 - 結果: filter-jev 7 − 13（−7.5）、filter-random 2 − 18（−35.1）。Jev v1 単体（−7.7）と変わらず
 - 結論: 明らかな悪手は主な敗因ではない。Jev の候補選びはランダムより大幅に良い
