@@ -1,0 +1,9 @@
+confidence_lower_bound,auto_handled_pct,auto_accuracy_both_pct,sent_to_person_pct,overall_if_low_conf_sent_to_gpt_pct,overall_without_fallback_pct
+0,100,68,0,68,68
+0.2,100,68,0,68,68
+0.3,93,70,7,69,68
+0.4,82,72,18,66,68
+0.5,70,74,30,65,68
+0.6,64,78,36,64,68
+0.7,55,80,45,63,68
+0.8,40,85,60,59,68

@@ -1,0 +1,15 @@
+model,correct,predicted,items
+gpt,高,高,20
+gpt,高,中,1
+gpt,低,高,1
+gpt,低,低,9
+gpt,低,中,31
+gpt,中,高,6
+gpt,中,中,32
+jev,高,高,20
+jev,高,中,1
+jev,低,高,1
+jev,低,低,21
+jev,低,中,19
+jev,中,高,7
+jev,中,中,31

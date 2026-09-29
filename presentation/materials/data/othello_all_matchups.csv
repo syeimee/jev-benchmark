@@ -1,0 +1,19 @@
+experiment,p1,p2,games,p1_wins,p1_losses,draws,p1_avg_disc_diff,std_error,log_file,note
+O-1,Jev (v1),GPT (gpt-5-mini),1,0,1,0,-32,,results/2026-09-28T12-39-37-653Z.jsonl,最初の1局。ランダム序盤なし
+O-1,GPT (gpt-5-mini),random,1,1,0,0,24,,results/2026-09-28T12-18-57-595Z.jsonl,動作確認
+基準線,ルール v1,ルール v2,40,12,28,0,-13.5,3.7,results/baseline-rule1-rule2.jsonl,seed 11
+基準線,ルール v1,random,40,40,0,0,37.1,2.0,results/baseline-rule1-random.jsonl,seed 11
+基準線,ルール v2,random,40,40,0,0,36.9,1.9,results/baseline-rule2-random.jsonl,seed 11
+O-2,Jev v1,ルール v1,20,7,13,0,-5.5,6.0,results/phase2-jev1-rule1.jsonl,seed 101
+O-2,Jev v2,ルール v2,20,4,14,2,-16.6,5.8,results/phase2-jev2-rule2.jsonl,seed 101
+O-2,Jev v1,Jev v2,20,13,7,0,5.6,6.3,results/phase2-jev1-jev2.jsonl,seed 101
+O-3,Jev v1,ルール v2,20,7,13,0,-7.7,6.1,results/phase3-v1.jsonl,seed 101
+O-3,Jev v2 + WARNING回避の指示,ルール v2,20,6,14,0,-11.6,5.7,results/phase3-v2-strict.jsonl,seed 101
+O-3,Jev v1 + 確定石,ルール v2,20,4,16,0,-15.9,5.4,results/phase3-v1-stable.jsonl,seed 101
+O-3,Jev v1 + 隅の警告,ルール v2,20,6,14,0,-17.2,6.3,results/phase3-v1-corner.jsonl,seed 101
+O-3,Jev v1 + 2手先の着手可能数,ルール v2,20,4,16,0,-17.6,6.1,results/phase3-v1-reply.jsonl,seed 101
+O-3,Jev v1 + 着手後の石数,ルール v2,20,4,16,0,-19,5.8,results/phase3-v1-discs.jsonl,seed 101
+O-4,ルールで絞る→Jev v1,ルール v2,20,7,13,0,-7.5,5.1,results/phase4-filter-jev.jsonl,seed 101
+O-4,ルールで絞る→ランダム,ルール v2,20,2,18,0,-35.1,4.3,results/phase4-filter-random.jsonl,seed 101
+O-5,Jev→GPT（confidence<0.4でGPT）,ルール v2,10,0,10,0,-26.8,4.3,results/phase5-escalate.jsonl,seed 101、最初の10序盤
+O-5,GPT単体（gpt-5-mini）,ルール v2,10,1,9,0,-29.3,7.6,results/phase5-gpt.jsonl,seed 101、最初の10序盤

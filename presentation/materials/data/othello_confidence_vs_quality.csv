@@ -1,0 +1,6 @@
+confidence_band,decisions,share_pct,agree_with_rule_v2_pct,agree_if_random_pct
+0-0.2,310,16,31,19
+0.2-0.4,747,38,42,17
+0.4-0.6,489,25,54,19
+0.6-0.8,269,14,75,22
+0.8-1,176,9,91,25

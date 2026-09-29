@@ -1,0 +1,6 @@
+method,department_pct,urgency_pct,both_pct,median_latency_ms,cost_usd_100_items
+キーワードルールのみ,60,46,29,,0
+Jev,95,72,68,401,0.0025
+GPT (gpt-5-mini),93,61,58,4289,0.0668
+（参考）R-1: 部署ルール3本 → Jev,92,71,64,,
+（参考）R-1: Jev（同じ実行）,96,71,68,,

@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { JEV_MODEL, classifyWithJev } from './classify.js';
@@ -87,7 +87,8 @@ function git(cmd: string): string {
 
 const report = {
   createdAt: new Date().toISOString(),
-  data: values.data,
+  // Relative to the repo root so reports don't leak local paths.
+  data: relative(join(appDir, '../..'), values.data),
   n: rows.length,
   /** Everything needed to know what exactly was tried. */
   config: {

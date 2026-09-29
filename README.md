@@ -3,6 +3,21 @@
 Jev（`typesafe-ai/jev`、`experimental_evaluate`）と GPT（`openai/gpt-5-mini` など）をオセロで対局させ、強さと応答の中身を比較する。
 プロンプト仕様は [docs/prompt-spec.md](docs/prompt-spec.md) を参照。
 
+> **注意**: ここにある結果は、個人で行った小規模な検証（オセロは 1 条件 10〜20 局、問い合わせは 1 人がラベルを付けた架空の 100 件）に基づくものです。
+> 比較した GPT は `openai/gpt-5-mini`（プロンプト・推論設定は未調整）のみで、Jev は実験的な API（2026-09 時点）です。
+> モデルの一般的な優劣を示すものではありません。条件と限界は [docs/experiments.md](docs/experiments.md) を参照してください。
+
+## 構成
+
+| パス | 内容 |
+|---|---|
+| `src/`, `test/` | オセロのベンチマーク（CLI・ビューア・キャプチャ） |
+| `apps/inquiry-router/` | 問い合わせの振り分けアプリ（Web 画面と評価 CLI） |
+| `packages/jev-kit/` | 共有部分（再試行、confidence・コストの取り出し） |
+| `results/`, `captures/`, `apps/*/results/` | すべての試行のログ |
+| `docs/experiments.md` | 全試行の記録 |
+| `presentation/materials/` | 発表用の資料（まとめ・CSV・画像） |
+
 ## セットアップ
 
 ```sh
@@ -47,3 +62,16 @@ npm run viewer        # http://localhost:5174
 npm test
 npm run typecheck
 ```
+
+## 問い合わせの振り分けアプリ
+
+```sh
+node --env-file-if-exists=.env --import tsx apps/inquiry-router/src/server.ts   # http://localhost:5175
+node --env-file-if-exists=.env --import tsx apps/inquiry-router/src/eval.ts [--with-gpt] [--data <jsonl>]
+```
+
+画面から入力した問い合わせは `apps/inquiry-router/results/requests.jsonl` に記録される（リポジトリには含めない）。
+
+## ライセンス
+
+MIT

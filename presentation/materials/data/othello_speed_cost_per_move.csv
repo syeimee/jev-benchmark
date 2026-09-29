@@ -1,0 +1,3 @@
+model,calls,median_latency_ms,mean_cost_usd_per_move,median_output_tokens,source
+Jev,453,341,0.000036,58,results/phase3-v1.jsonl
+GPT (gpt-5-mini),220,25700,0.005373,2597,results/phase5-gpt.jsonl

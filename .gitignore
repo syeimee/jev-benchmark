@@ -1,2 +1,7 @@
 node_modules/
 .env
+.DS_Store
+# Web UI usage log: may contain whatever was typed into the app
+apps/*/results/requests.jsonl
+# Rebuilt from presentation/materials
+presentation/*.zip
