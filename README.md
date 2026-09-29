@@ -1,4 +1,4 @@
-# jev-testing — Othello AI benchmark
+# jev-benchmark
 
 Jev（`typesafe-ai/jev`、`experimental_evaluate`）と GPT（`openai/gpt-5-mini` など）をオセロで対局させ、強さと応答の中身を比較する。
 プロンプト仕様は [docs/prompt-spec.md](docs/prompt-spec.md) を参照。
@@ -16,6 +16,7 @@ Jev（`typesafe-ai/jev`、`experimental_evaluate`）と GPT（`openai/gpt-5-mini
 | `packages/jev-kit/` | 共有部分（再試行、confidence・コストの取り出し） |
 | `results/`, `captures/`, `apps/*/results/` | すべての試行のログ |
 | `docs/experiments.md` | 全試行の記録 |
+| `presentation/jev-benchmark-slides.pdf` | 発表スライド「判断だけを任せる AI をオセロと問い合わせ振り分けで検証してみた」（社内エンジニア会、2026-10-01） |
 | `presentation/materials/` | 発表用の資料（まとめ・CSV・画像） |
 
 ## セットアップ

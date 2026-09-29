@@ -1,5 +1,5 @@
 {
-  "name": "jev-testing",
+  "name": "jev-benchmark",
   "private": true,
   "type": "module",
   "scripts": {
